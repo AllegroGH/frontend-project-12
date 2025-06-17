@@ -1,13 +1,17 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { Alert } from 'react-bootstrap';
 
 const Login = () => {
+  const [authError, setAuthError] = useState('');
+  const navigate = useNavigate();
+
   const validationSchema = Yup.object().shape({
-    username: Yup.string()
-      .required('это обязательное поле'),
-    password: Yup.string()
-      .required('это обязательное поле')
-      .min(6, 'Пароль должен содержать минимум 6 символов'),
+    username: Yup.string().required('это обязательное поле'),
+    password: Yup.string().required('это обязательное поле').min(5, 'Пароль должен содержать минимум 5 символов'),
   });
 
   const initialValues = {
@@ -15,14 +19,27 @@ const Login = () => {
     password: '',
   };
 
-  const handleSubmit = (values, { setSubmitting }) => {
-    console.log('Отправленные данные:', values);
-    setSubmitting(false);
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      setAuthError('');
+      const response = await axios.post('/api/v1/login', values);
+
+      localStorage.setItem('chatApp_jwtToken', response.data.token);
+      navigate('/');
+
+    } catch (error) {
+      setAuthError('Неверное имя пользователя или пароль');
+      console.error('Ошибка авторизации:', error);
+    } finally {
+      console.log('Отправленные данные:', values);
+      setSubmitting(false);
+    }
   };
 
   return (
     <div className="login-form">
       <h2>Авторизация</h2>
+      {authError && <Alert variant="danger">{authError}</Alert>}
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

@@ -7,5 +7,9 @@ start:
 build:
 	cd ./frontend/ && npm run build
 
-dev:
+#dev
+back:
+	npx start-server
+
+front:
 	cd ./frontend/ && npm run dev

@@ -1,11 +1,13 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 // import { useState } from 'react'
 // import reactLogo from './assets/react.svg'
 // import viteLogo from '/vite.svg'
 import './App.css'
 
 import Login from './components/Login';
+import ChatPage from './components/ChatPage';
 import NotFound from './components/NotFound';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // function App() {
 //   const [count, setCount] = useState(0)
@@ -42,8 +44,11 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Navigate to="login" />} />
-        <Route path='login' element={<Login />} />        Add commentMore actions
+        {/* <Route path='/' element={<Navigate to="login" />} /> */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<ChatPage />} />
+        </Route>
+        <Route path='login' element={<Login />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
     </>
