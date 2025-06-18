@@ -15,9 +15,7 @@ export const apiSlice = createApi({
     getChannels: builder.query({
       query: () => '/channels',
     }),
-    getMessages: builder.query({
-      query: () => '/messages',
-    }),
+
     // addChannel: builder.mutation({
     //   query: (channel) => ({
     //     url: '/channels',
@@ -25,6 +23,37 @@ export const apiSlice = createApi({
     //     body: channel,
     //   }),
     // }),
+
+    addChannel: builder.mutation({
+      query: (channel) => ({
+        url: '/channels',
+        method: 'POST',
+        body: channel,
+      }),
+      invalidatesTags: ['Channel'],
+    }),
+    
+    renameChannel: builder.mutation({
+      query: ({ id, ...rest }) => ({
+        url: `/channels/${id}`,
+        method: 'PATCH',
+        body: rest,
+      }),
+      invalidatesTags: ['Channel'],
+    }),
+
+    removeChannel: builder.mutation({
+      query: (id) => ({
+        url: `/channels/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Channel'],
+    }),
+   
+    getMessages: builder.query({
+      query: () => '/messages',
+    }),
+
     addMessage: builder.mutation({
       query: (message) => ({
         url: '/messages',
@@ -37,7 +66,9 @@ export const apiSlice = createApi({
 
 export const {
   useGetChannelsQuery,
-  useGetMessagesQuery,
   useAddChannelMutation,
+  useRenameChannelMutation,
+  useRemoveChannelMutation,
+  useGetMessagesQuery,
   useAddMessageMutation,
 } = apiSlice;

@@ -1,6 +1,8 @@
 import io from 'socket.io-client';
 import { store } from './store';
 import { apiSlice  } from './slices/apiSlice';
+// import { useGetChannelsQuery } from '../slices/apiSlice';
+import { setCurrentChannel } from './slices/chatSlice';
 
 let socketInstance = null;
 
@@ -29,6 +31,43 @@ export const initSocket = (token) => {
       apiSlice.util.updateQueryData('getMessages', undefined, (draft) => {
         // console.log('socket.js:newMessage:: ', message);
         draft.push(message);
+      })
+    );
+  });
+
+  socketInstance.on('newChannel', (channel) => {
+    store.dispatch(
+      apiSlice.util.updateQueryData('getChannels', undefined, (draft) => {
+        draft.push(channel);
+      })
+    );
+  });
+
+  socketInstance.on('removeChannel', ({ id }) => {
+    store.dispatch(
+      apiSlice.util.updateQueryData('getChannels', undefined, (draft) => {
+        return draft.filter(channel => channel.id !== id);
+      })
+    );
+    
+    // Переключение на general при удалении текущего
+    const { currentChannelId } = store.getState().chat;
+    if (currentChannelId === id) {
+      // const {
+      //   data: channels = [],
+      // } = useGetChannelsQuery();
+      // const generalChannel = channels.find((channel) => channel.name === 'general');
+      // const newId = generalChannel ? generalChannel.id : '1';
+      // store.dispatch(setCurrentChannel(newId));
+      store.dispatch(setCurrentChannel('1'));
+    }
+  });
+
+  socketInstance.on('renameChannel', ({ id, name }) => {
+    store.dispatch(
+      apiSlice.util.updateQueryData('getChannels', undefined, (draft) => {
+        const channel = draft.find(c => c.id === id);
+        if (channel) channel.name = name;
       })
     );
   });

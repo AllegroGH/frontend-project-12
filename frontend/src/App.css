@@ -51,3 +51,16 @@
 .error-message {
   color: red;
 }
+
+.lead {
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+
+.d-flex {
+  display: flex !important;
+}
+
+.justify-content-end {
+  justify-content: flex-end !important;
+}

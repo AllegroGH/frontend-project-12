@@ -1,8 +1,25 @@
+// import MessageList from './MessageList';
+
+//   return (
+//     <div className="container-fluid h-100">
+//       <div className="row h-100">
+//         <ChannelList channels={channels} />
+//         <MessageList 
+//           channelId={currentChannelId} 
+//           channelName={channels.find(c => c.id === currentChannelId)?.name}
+//         />
+//       </div>
+//     </div>
+//   );
+// };
+
+
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetChannelsQuery, useGetMessagesQuery } from '../slices/apiSlice';
 import { setCurrentChannel } from '../slices/chatSlice';
+import ChannelList from './channels/ChannelList';
 import MessageForm from './MessageForm';
 
 const ChatPage = () => {
@@ -44,14 +61,14 @@ const ChatPage = () => {
     }
   }, [channels, currentChannelId, dispatch]);
 
-  if (channelsLoading || messagesLoading) return <div>Loading...</div>;
+  if (channelsLoading || messagesLoading) return <div>Загрузка...</div>;
   if (channelsError || messagesError) return <div>Error loading data</div>;
 
   return (
     <div className="container-fluid h-100">
       <div className="row h-100">
         {/* Список каналов */}
-        <div className="col-4 border-end px-0">
+        {/* <div className="col-4 border-end px-0">
           <div className="list-group">
             {channels.map((channel) => (
               <button
@@ -60,10 +77,14 @@ const ChatPage = () => {
                   }`}
                 onClick={() => dispatch(setCurrentChannel(channel.id))}
               >
-                {channel.name}
+                # {channel.name}
               </button>
             ))}
           </div>
+        </div> */}
+
+        <div className="row h-100">
+          <ChannelList channels={channels} />
         </div>
 
         {/* Чат */}
