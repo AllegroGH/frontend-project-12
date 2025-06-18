@@ -4,10 +4,13 @@ import axios from 'axios';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Alert } from 'react-bootstrap';
+// import { useDispatch } from 'react-redux';
+// import { setCredentials } from '../slices/authSlice';
 
 const Login = () => {
   const [authError, setAuthError] = useState('');
   const navigate = useNavigate();
+  // const dispatch = useDispatch();
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().required('это обязательное поле'),
@@ -24,7 +27,11 @@ const Login = () => {
       setAuthError('');
       const response = await axios.post('/api/v1/login', values);
 
-      localStorage.setItem('chatApp_jwtToken', response.data.token);
+      const { username, token } = response.data;
+      localStorage.setItem('chatApp_jwtToken', token);
+      localStorage.setItem('chatApp_username', username);
+      // dispatch(setCredentials({ username, token }));
+
       navigate('/');
 
     } catch (error) {

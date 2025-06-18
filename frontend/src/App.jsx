@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { initSocket, disconnectSocket } from './socket';
 import { Routes, Route } from 'react-router-dom';
 // import { useState } from 'react'
 // import reactLogo from './assets/react.svg'
@@ -8,6 +11,38 @@ import Login from './components/Login';
 import ChatPage from './components/ChatPage';
 import NotFound from './components/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
+
+function App() {
+  const { token } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (token) {
+      initSocket(token);
+
+      return () => {
+        disconnectSocket();
+      };
+    }
+  }, [token]);
+
+  // useEffect(() => {
+  //   if (token) initSocket(token);
+  // }, [token]);
+
+  return (
+    <>
+      <Routes>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<ChatPage />} />
+        </Route>
+        <Route path='login' element={<Login />} />
+        <Route path='*' element={<NotFound />} />
+      </Routes>
+    </>
+  )
+}
+
+export default App
 
 // function App() {
 //   const [count, setCount] = useState(0)
@@ -37,22 +72,3 @@ import ProtectedRoute from './components/ProtectedRoute';
 //     </>
 //   )
 // }
-
-function App() {
-  //  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <Routes>
-        {/* <Route path='/' element={<Navigate to="login" />} /> */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<ChatPage />} />
-        </Route>
-        <Route path='login' element={<Login />} />
-        <Route path='*' element={<NotFound />} />
-      </Routes>
-    </>
-  )
-}
-
-export default App
