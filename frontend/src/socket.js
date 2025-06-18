@@ -10,7 +10,18 @@ export const initSocket = (token) => {
   socketInstance = io('/', {
     extraHeaders: {
       Authorization: `Bearer ${token}`,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
     },
+  });
+
+  socketInstance.on('disconnect', (reason) => {
+    if (reason === 'io server disconnect') console.log('Сервер разорвал соединение');
+  });
+
+  socketInstance.on('reconnect_failed', () => {
+    console.error('Не удалось подключиться после всех попыток');
   });
 
   socketInstance.on('newMessage', (message) => {

@@ -27,7 +27,7 @@ const ChatPage = () => {
   } = useGetMessagesQuery();
 
   // console.log('chatPage:messages:: ', messages);
-
+  // console.log('chatPage:channels:: ', channels);
 
   useEffect(() => {
     if (!token) {
@@ -37,7 +37,10 @@ const ChatPage = () => {
 
   useEffect(() => {
     if (channels.length > 0 && !currentChannelId) {
-      dispatch(setCurrentChannel(channels[0].id));
+      const generalChannel = channels.find((channel) => channel.name === 'general');
+      const newId = generalChannel ? generalChannel.id : channels[0].id;
+      dispatch(setCurrentChannel(newId));
+      // dispatch(setCurrentChannel(channels[0].id));
     }
   }, [channels, currentChannelId, dispatch]);
 
