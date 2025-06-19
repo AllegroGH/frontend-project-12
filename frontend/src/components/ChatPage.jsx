@@ -1,19 +1,3 @@
-// import MessageList from './MessageList';
-
-//   return (
-//     <div className="container-fluid h-100">
-//       <div className="row h-100">
-//         <ChannelList channels={channels} />
-//         <MessageList 
-//           channelId={currentChannelId} 
-//           channelName={channels.find(c => c.id === currentChannelId)?.name}
-//         />
-//       </div>
-//     </div>
-//   );
-// };
-
-
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -46,6 +30,22 @@ const ChatPage = () => {
     }
   }, [token, navigate]);
 
+  const currentChannel = channels.find(c => c.id === currentChannelId);
+  const channelMessages = messages.filter(m => m.channelId === currentChannelId);
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    }
+  }, [token, navigate]);
+
+  useEffect(() => {
+    const container = document.getElementById('messages-box');
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }, [channelMessages]);
+
   useEffect(() => {
     if (channels.length > 0 && !currentChannelId) {
       const generalChannel = channels.find((channel) => channel.name === 'general');
@@ -58,24 +58,29 @@ const ChatPage = () => {
   if (channelsError || messagesError) return <div>Error loading data</div>;
 
   return (
-    <div className="container-fluid h-100">
-      <div className="row h-100">
-        <div className="row h-100">
-          <ChannelList channels={channels} />
-        </div>
+    <div className="container h-100 my-4 overflow-hidden rounded shadow">
+      <div className="row h-100 bg-white flex-md-row">
+        <ChannelList channels={channels} />
 
-        <div className="col-8 d-flex flex-column h-100">
-          <div className="flex-grow-1 overflow-auto mb-3">
-            {messages
-              .filter((m) => m.channelId === currentChannelId)
-              .map((message) => (
-                <div key={message.id} className="mb-2">
-                  <strong>{message.username}:</strong> {message.body}
+        <div className="col p-0 h-100">
+          <div className="d-flex flex-column h-100">
+            <div className="bg-light mb-4 p-3 shadow-sm small">
+              <p className="m-0"><b># {currentChannel?.name}</b></p>
+              <span className="text-muted">{channelMessages.length} сообщени(я/й)</span>
+            </div>
+
+            <div id="messages-box" className="chat-messages overflow-auto px-5">
+              {channelMessages.map((message) => (
+                <div key={message.id} className="text-break mb-2">
+                  <b>{message.username}</b>: {message.body}
                 </div>
               ))}
-          </div>
+            </div>
 
-          <MessageForm channelId={currentChannelId} />
+            <div className="mt-auto px-5 py-3">
+              <MessageForm channelId={currentChannelId} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

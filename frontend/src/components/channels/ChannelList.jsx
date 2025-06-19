@@ -1,53 +1,104 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentChannel } from '../../slices/chatSlice';
-import ChannelDropdown from './ChannelDropdown';
+import { Dropdown } from 'react-bootstrap';
 import { useState } from 'react';
 import ChannelModal from './ChannelModal';
 
 const ChannelList = ({ channels }) => {
   const dispatch = useDispatch();
-  // const { channels } = useSelector(state => state.chat);
   const { currentChannelId } = useSelector(state => state.chat);
-  const [showAddModal, setShowAddModal] = useState(false);
+  // const [showAddModal, setShowAddModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState('add');
+  const [currentChannel, setCurrentChannelData] = useState(null);
+
+  const handleShowModal = (mode, channel = null) => {
+    setModalMode(mode);
+    setCurrentChannelData(channel);
+    setShowModal(true);
+  };
 
   return (
-    <div className="col-4 border-end px-0">
-      <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
-        <span>Каналы</span>
+    <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
+      <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
+        <b>Каналы</b>
         <button
           type="button"
-          className="btn btn-sm btn-primary"
-          onClick={() => setShowAddModal(true)}
+          className="p-0 text-primary btn btn-group-vertical"
+          onClick={() => handleShowModal('add')}
         >
-          +
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 16 16"
+            width="20"
+            height="20"
+            fill="currentColor"
+            className="bi bi-plus-square"
+          >
+            <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"></path>
+            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"></path>
+          </svg>
+          <span className="visually-hidden">+</span>
         </button>
       </div>
 
-      <ul className="nav flex-column">
+      <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
         {channels.map(channel => (
           <li key={channel.id} className="nav-item w-100">
             <div
-              className={`nav-link w-100 text-start btn ${channel.id === currentChannelId ? 'active' : ''
-                }`}
-              onClick={() => dispatch(setCurrentChannel(channel.id))}
+              role="group"
+              className={`d-flex dropdown btn-group ${channel.id === currentChannelId ? 'show' : ''}`}
             >
-              <span className="me-1">#</span>
-              {channel.name}
+              <button
+                type="button"
+                className={`w-100 rounded-0 text-start text-truncate btn ${channel.id === currentChannelId ? 'btn-secondary' : ''
+                  }`}
+                onClick={() => dispatch(setCurrentChannel(channel.id))}
+              >
+                <span className="me-1">#</span>
+                {channel.name}
+              </button>
+
               {channel.id === currentChannelId && (
-                <span className="float-end">
-                  <ChannelDropdown channel={channel} />
-                </span>
+                <Dropdown>
+                  <Dropdown.Toggle
+                    split
+                    variant="secondary"
+                    className="flex-grow-0 dropdown-toggle-split rounded-end rounded-start-0"
+                    style={{
+                      borderTopLeftRadius: '0',
+                      borderBottomLeftRadius: '0',
+                      marginLeft: '-1px' // Убираем двойную границу
+                    }}
+                  >
+                    <span className="visually-hidden">Управление каналом</span>
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => handleShowModal('rename', channel)}>
+                      Переименовать
+                    </Dropdown.Item>
+                    {channel.removable && (
+                      <Dropdown.Item
+                        onClick={() => handleShowModal('remove', channel)}
+                        className="text-danger"
+                      >
+                        Удалить
+                      </Dropdown.Item>
+                    )}
+                  </Dropdown.Menu>
+                </Dropdown>
               )}
             </div>
           </li>
         ))}
       </ul>
 
-      {showAddModal && (
+      {showModal && (
         <ChannelModal
-          mode="add"
-          channel={{ name: '' }}
-          onHide={() => setShowAddModal(false)}
+          mode={modalMode}
+          channel={currentChannel || { name: '' }}
+          onHide={() => setShowModal(false)}
         />
       )}
     </div>
@@ -55,3 +106,6 @@ const ChannelList = ({ channels }) => {
 };
 
 export default ChannelList;
+
+
+
