@@ -28,9 +28,6 @@ const ChatPage = () => {
   const { token } = useSelector((state) => state.auth);
   const { currentChannelId } = useSelector((state) => state.chat);
 
-  // const { username } = useSelector((state) => state.auth);
-  // console.log('chatPage:username:: ', username);
-
   const {
     data: channels = [],
     isLoading: channelsLoading,
@@ -43,9 +40,6 @@ const ChatPage = () => {
     error: messagesError,
   } = useGetMessagesQuery();
 
-  // console.log('chatPage:messages:: ', messages);
-  // console.log('chatPage:channels:: ', channels);
-
   useEffect(() => {
     if (!token) {
       navigate('/login');
@@ -57,7 +51,6 @@ const ChatPage = () => {
       const generalChannel = channels.find((channel) => channel.name === 'general');
       const newId = generalChannel ? generalChannel.id : channels[0].id;
       dispatch(setCurrentChannel(newId));
-      // dispatch(setCurrentChannel(channels[0].id));
     }
   }, [channels, currentChannelId, dispatch]);
 
@@ -67,27 +60,10 @@ const ChatPage = () => {
   return (
     <div className="container-fluid h-100">
       <div className="row h-100">
-        {/* Список каналов */}
-        {/* <div className="col-4 border-end px-0">
-          <div className="list-group">
-            {channels.map((channel) => (
-              <button
-                key={channel.id}
-                className={`list-group-item list-group-item-action ${channel.id === currentChannelId ? 'active' : ''
-                  }`}
-                onClick={() => dispatch(setCurrentChannel(channel.id))}
-              >
-                # {channel.name}
-              </button>
-            ))}
-          </div>
-        </div> */}
-
         <div className="row h-100">
           <ChannelList channels={channels} />
         </div>
 
-        {/* Чат */}
         <div className="col-8 d-flex flex-column h-100">
           <div className="flex-grow-1 overflow-auto mb-3">
             {messages

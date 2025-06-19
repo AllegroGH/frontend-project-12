@@ -17,14 +17,14 @@ const SignupPage = () => {
   const usernameRef = useRef(null);
 
   const validationSchema = Yup.object().shape({
-    username: Yup.string()
+    username: Yup.string().trim()
       .required('Обязательное поле')
       .min(3, 'От 3 до 20 символов')
       .max(20, 'От 3 до 20 символов'),
-    password: Yup.string()
+    password: Yup.string().trim()
       .required('Обязательное поле')
       .min(6, 'Не менее 6 символов'),
-    confirmPassword: Yup.string()
+    confirmPassword: Yup.string().trim()
       .required('Подтвердите пароль')
       .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать')
   });
@@ -40,8 +40,8 @@ const SignupPage = () => {
       setAuthError('');
       setIsSubmitting(true);
       const response = await axios.post('/api/v1/signup', {
-        username: values.username,
-        password: values.password,
+        username: values.username.trim(),
+        password: values.password.trim(),
       });
 
       const { username, token } = response.data;

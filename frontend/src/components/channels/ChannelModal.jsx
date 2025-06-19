@@ -3,6 +3,7 @@ import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Modal, Button } from 'react-bootstrap';
 import { useAddChannelMutation, useRemoveChannelMutation, useRenameChannelMutation } from '../../slices/apiSlice';
+import { toast } from 'react-toastify';
 
 const ChannelModal = ({ mode, channel, onHide }) => {
   const inputRef = useRef(null);
@@ -34,8 +35,10 @@ const ChannelModal = ({ mode, channel, onHide }) => {
     try {
       if (mode === 'add') {
         await addChannel(values).unwrap();
+        toast.success('Канал создан');
       } else if (mode === 'rename') {
         await renameChannel({ id: channel.id, ...values }).unwrap();
+        toast.success('Канал переименован');
       }
       onHide();
     } catch (err) {
@@ -47,6 +50,7 @@ const ChannelModal = ({ mode, channel, onHide }) => {
 
   const handleRemove = async () => {
     await removeChannel(channel.id).unwrap();
+    toast.success('Канал удалён');
     onHide();
   };
 
