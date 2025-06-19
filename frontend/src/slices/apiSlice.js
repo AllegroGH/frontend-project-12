@@ -16,14 +16,6 @@ export const apiSlice = createApi({
       query: () => '/channels',
     }),
 
-    // addChannel: builder.mutation({
-    //   query: (channel) => ({
-    //     url: '/channels',
-    //     method: 'POST',
-    //     body: channel,
-    //   }),
-    // }),
-
     addChannel: builder.mutation({
       query: (channel) => ({
         url: '/channels',
@@ -60,7 +52,16 @@ export const apiSlice = createApi({
         method: 'POST',
         body: message,
       }),
+      invalidatesTags: ['Message'],
     }),
+    
+    removeMessage: builder.mutation({
+      query: (id) => ({
+        url: `/messages/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Message'],
+    }),    
   }),
 });
 
@@ -71,4 +72,5 @@ export const {
   useRemoveChannelMutation,
   useGetMessagesQuery,
   useAddMessageMutation,
+  useRemoveMessageMutation,
 } = apiSlice;

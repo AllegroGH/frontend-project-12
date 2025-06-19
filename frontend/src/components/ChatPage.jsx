@@ -1,12 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useGetChannelsQuery, useGetMessagesQuery } from '../slices/apiSlice';
 import { setCurrentChannel } from '../slices/chatSlice';
-import ChannelList from './channels/ChannelList';
-import MessageForm from './MessageForm';
+import ChannelList from './chatComponents/ChannelList';
+import MessageForm from './chatComponents/MessageForm';
 
 const ChatPage = () => {
+  const messageFormRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
@@ -44,6 +45,7 @@ const ChatPage = () => {
     if (container) {
       container.scrollTop = container.scrollHeight;
     }
+    messageFormRef.current?.focus();
   }, [channelMessages]);
 
   useEffect(() => {
@@ -53,6 +55,8 @@ const ChatPage = () => {
       dispatch(setCurrentChannel(newId));
     }
   }, [channels, currentChannelId, dispatch]);
+
+
 
   if (channelsLoading || messagesLoading) return <div>Загрузка...</div>;
   if (channelsError || messagesError) return <div>Error loading data</div>;
@@ -78,7 +82,7 @@ const ChatPage = () => {
             </div>
 
             <div className="mt-auto px-5 py-3">
-              <MessageForm channelId={currentChannelId} />
+              <MessageForm ref={messageFormRef} channelId={currentChannelId} />
             </div>
           </div>
         </div>

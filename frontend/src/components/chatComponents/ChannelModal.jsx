@@ -1,16 +1,25 @@
 import { useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { Modal, Button } from 'react-bootstrap';
-import { useAddChannelMutation, useRemoveChannelMutation, useRenameChannelMutation } from '../../slices/apiSlice';
 import { toast } from 'react-toastify';
+import { useAddChannelMutation, useRemoveChannelMutation, useRenameChannelMutation } from '../../slices/apiSlice';
+// import { useGetMessagesQuery, useRemoveMessageMutation } from '../../slices/apiSlice';
+import { setCurrentChannel } from '../../slices/chatSlice';
 
-const ChannelModal = ({ mode, channel, onHide }) => {
+const ChannelModal = ({ mode, channel, channels, onHide }) => {
   const inputRef = useRef(null);
+  const dispatch = useDispatch();
 
   const [addChannel] = useAddChannelMutation();
   const [removeChannel] = useRemoveChannelMutation();
   const [renameChannel] = useRenameChannelMutation();
+  // const [removeMessage] = useRemoveMessageMutation();
+
+  // const {
+  //   data: messages = [],
+  // } = useGetMessagesQuery();
 
   useEffect(() => {
     if (inputRef.current && mode !== 'remove') {
@@ -27,14 +36,25 @@ const ChannelModal = ({ mode, channel, onHide }) => {
     name: Yup.string()
       .required('Обязательное поле')
       .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов'),
+      .max(20, 'От 3 до 20 символов')
+      .test(
+        'unique-channel',
+        'Должно быть уникальным',
+        (value) => {
+          if (!value || mode === 'remove') return true;
+          const channelExists = channels.some((c) => c.name === value);
+          // if (mode === 'rename' && value === channel.name) return true;
+          return !channelExists;
+        }
+      ),
   });
 
   const handleSubmit = async (values, { setSubmitting, setFieldTouched }) => {
     setFieldTouched('name', true);
     try {
       if (mode === 'add') {
-        await addChannel(values).unwrap();
+        const newChannel = await addChannel(values).unwrap();
+        dispatch(setCurrentChannel(newChannel.id));
         toast.success('Канал создан');
       } else if (mode === 'rename') {
         await renameChannel({ id: channel.id, ...values }).unwrap();
@@ -42,16 +62,26 @@ const ChannelModal = ({ mode, channel, onHide }) => {
       }
       onHide();
     } catch (err) {
-      console.error('Ошибка:', err);
+      console.error('Ошибка добавления/изменения канала:', err);
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleRemove = async () => {
-    await removeChannel(channel.id).unwrap();
-    toast.success('Канал удалён');
-    onHide();
+    try {
+      await removeChannel(channel.id).unwrap();
+      // const messagesToDelete = messages.filter((m) => m.channelId === channel.id);
+      // messagesToDelete.forEach(async (m) => {
+      //   await removeMessage(m.id).unwrap();
+      // });
+      // console.log(messagesToDelete);
+      // console.log(messages);
+      toast.success('Канал удалён');
+      onHide();
+    } catch (err) {
+      console.error('Ошибка удаления канала:', err);
+    }
   };
 
   return (

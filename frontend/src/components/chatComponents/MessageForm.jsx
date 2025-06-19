@@ -1,13 +1,19 @@
-// import { useState } from 'react';
+import React from 'react';
+import { useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { useAddMessageMutation } from '../slices/apiSlice';
+import { useAddMessageMutation } from '../../slices/apiSlice';
 import { useFormik } from 'formik';
 
-const MessageForm = ({ channelId }) => {
-  // const [message, setMessage] = useState('');
+const MessageForm = React.forwardRef(({ channelId }, ref) => {
   const { username } = useSelector((state) => state.auth);
   const [addMessage] = useAddMessageMutation();
+  const inputRef = useRef(null);
 
+  React.useImperativeHandle(ref, () => ({
+    focus: () => {
+      inputRef.current?.focus();
+    }
+  }));
 
   const formik = useFormik({
     initialValues: { body: '' },
@@ -15,6 +21,7 @@ const MessageForm = ({ channelId }) => {
       try {
         await addMessage({ username, channelId, body: values.body });
         resetForm();
+        inputRef.current?.focus();
       } catch (err) {
         console.error('Failed to send message:', err);
       }
@@ -25,6 +32,7 @@ const MessageForm = ({ channelId }) => {
     <form onSubmit={formik.handleSubmit} noValidate className="py-1 border rounded-2">
       <div className="input-group has-validation">
         <input
+          ref={inputRef}
           name="body"
           aria-label="Новое сообщение"
           placeholder="Введите сообщение..."
@@ -53,6 +61,6 @@ const MessageForm = ({ channelId }) => {
       </div>
     </form>
   );
-};
+});
 
 export default MessageForm;

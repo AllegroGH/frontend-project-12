@@ -7,7 +7,6 @@ import ChannelModal from './ChannelModal';
 const ChannelList = ({ channels }) => {
   const dispatch = useDispatch();
   const { currentChannelId } = useSelector(state => state.chat);
-  // const [showAddModal, setShowAddModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [currentChannel, setCurrentChannelData] = useState(null);
@@ -68,7 +67,7 @@ const ChannelList = ({ channels }) => {
                     style={{
                       borderTopLeftRadius: '0',
                       borderBottomLeftRadius: '0',
-                      marginLeft: '-1px' // Убираем двойную границу
+                      marginLeft: '-1px'
                     }}
                   >
                     <span className="visually-hidden">Управление каналом</span>
@@ -98,6 +97,7 @@ const ChannelList = ({ channels }) => {
         <ChannelModal
           mode={modalMode}
           channel={currentChannel || { name: '' }}
+          channels={channels}
           onHide={() => setShowModal(false)}
         />
       )}
