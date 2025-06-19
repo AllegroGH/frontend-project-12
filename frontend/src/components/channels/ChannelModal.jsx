@@ -65,6 +65,7 @@ const ChannelModal = ({ mode, channel, onHide }) => {
           initialValues={{ name: channel?.name || '' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
+          validateOnBlur={false}
         >
           {({ isSubmitting, errors, touched }) => (
             <Form>

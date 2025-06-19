@@ -1,36 +1,11 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Container, Navbar, Button } from 'react-bootstrap';
-// import { ToastContainer } from 'react-toastify';
-import notFoundImg from '../assets/404-D_FLHmTM.svg';
-import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../slices/authSlice';
-
+import { Link } from 'react-router-dom';
+import notFoundImg from '../assets/404_notFound_img.svg';
 
 const NotFoundPage = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { token } = useSelector((state) => state.auth);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate('/login');
-  };
-
   return (
     <div className="h-100" id="chat">
       <div className="d-flex flex-column h-100">
-        <Navbar expand="lg" className="shadow-sm navbar-light bg-white">
-          <Container>
-            <Navbar.Brand href="/">Hexlet Chat</Navbar.Brand>
-            {token && (
-              <Button variant="primary" onClick={handleLogout}>
-                Выйти
-              </Button>
-            )}
-          </Container>
-        </Navbar>
-
         <div className="text-center my-auto">
           <img
             alt="Страница не найдена"

@@ -1,15 +1,17 @@
+import React from 'react';
 import { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Alert, Container, Row, Col, Card, Navbar } from 'react-bootstrap';
-import loginImg from '../assets/avatar-DIE1AEpS.jpg'
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../slices/authSlice';
+import loginImg from '../assets/login_img.jpg'
 
 const LoginPage = () => {
   const [authError, setAuthError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const usernameRef = useRef(null);
@@ -24,9 +26,10 @@ const LoginPage = () => {
     password: '',
   };
 
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleSubmit = async (values) => {
     try {
       setAuthError('');
+      setIsSubmitting(true);
       const response = await axios.post('/api/v1/login', values);
       // console.log('Login:response:: ', response.data);
 
@@ -40,24 +43,18 @@ const LoginPage = () => {
 
     } catch (error) {
       setAuthError('Неверные имя пользователя или пароль');
-      usernameRef.current.focus();
-      usernameRef.current.select();
+      usernameRef.current?.focus();
+      usernameRef.current?.select();
       console.error('Ошибка авторизации:', error);
     } finally {
       // console.log('Отправленные данные:', values);
-      setSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="h-100" id="chat">
       <div className="d-flex flex-column h-100">
-        <Navbar expand="lg" className="shadow-sm navbar-light bg-white">
-          <Container>
-            <Navbar.Brand href="/">Hexlet Chat</Navbar.Brand>
-          </Container>
-        </Navbar>
-
         <Container fluid className="h-100">
           <Row className="justify-content-center align-content-center h-100">
             <Col xs={12} md={8} xxl={6}>
@@ -76,7 +73,7 @@ const LoginPage = () => {
                       validationSchema={validationSchema}
                       onSubmit={handleSubmit}
                     >
-                      {({ isSubmitting }) => (
+                      {() => (
                         <Form>
                           <h1 className="text-center mb-4">Войти</h1>
                           <div className="form-floating mb-3">
