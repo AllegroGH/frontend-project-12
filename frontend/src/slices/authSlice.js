@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { disconnectSocket } from '../socket';
 
 const initialState = {
   token: localStorage.getItem('chatApp_jwtToken') || null,
@@ -12,14 +13,17 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state, action) => {
-      state.username = action.payload.username;
       state.token = action.payload.token;
+      state.username = action.payload.username;
       localStorage.setItem('chatApp_jwtToken', action.payload.token);
+      localStorage.setItem('chatApp_username', action.payload.username);
     },
     logout: (state) => {
-      state.username = null;
+      disconnectSocket();
       state.token = null;
+      state.username = null;
       localStorage.removeItem('chatApp_jwtToken');
+      localStorage.removeItem('chatApp_username');
     }
   }
 });

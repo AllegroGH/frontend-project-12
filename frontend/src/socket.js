@@ -75,37 +75,11 @@ export const initSocket = (token) => {
 
 export const disconnectSocket = () => {
   if (socketInstance) {
+    // console.log('Disconnecting socket...');
     socketInstance.disconnect();
     socketInstance = null;
+    // console.log('Socket disconnected');
+  // } else {
+  //   console.log('socketInstance is FALSY');
   }
 };
-
-
-// let socket;
-
-// export const initSocket = (token) => {
-//   socket = io('/', {
-//     extraHeaders: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-
-//   socket.on('newMessage', (message) => {
-//     store.dispatch(
-//       apiSlice.util.updateQueryData('getMessages', undefined, (draft) => {
-//         console.log('socket.js:newMessage:: ', message);
-//         draft.push(message);
-//       })
-//     );
-//   });
-
-//   // socket.on('newChannel', (channel) => {
-//   //   store.dispatch(
-//   //     apiSlice.util.updateQueryData('getChannels', undefined, (draft) => {
-//   //       draft.push(channel);
-//   //     })
-//   //   );
-//   // });
-// };
-
-// export const getSocket = () => socket;
