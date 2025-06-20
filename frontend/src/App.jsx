@@ -5,6 +5,8 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
@@ -15,6 +17,20 @@ import AppHeader from './components/AppHeader';
 
 function App() {
   const { token, username } = useSelector((state) => state.auth);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    const handleOffline = () => toast.error(t('chatServer.netIsDown'));
+    const handleOnline = () => toast.success(t('chatServer.netIsUp'));
+
+    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnline);
+
+    return () => {
+      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('online', handleOnline);
+    };
+  }, [t]);
 
   useEffect(() => {
     if (token) {
@@ -58,31 +74,3 @@ function App() {
 }
 
 export default App
-
-// function App() {
-
-//   return (
-//     <>
-//       <div>
-//         <a href="https://vite.dev" target="_blank">
-//           <img src={viteLogo} className="logo" alt="Vite logo" />
-//         </a>
-//         <a href="https://react.dev" target="_blank">
-//           <img src={reactLogo} className="logo react" alt="React logo" />
-//         </a>
-//       </div>
-//       <h1>Vite + React</h1>
-//       <div className="card">
-//         <button onClick={() => setCount((count) => count + 1)}>
-//           count is {count}
-//         </button>
-//         <p>
-//           Edit <code>src/App.jsx</code> and save to test HMR
-//         </p>
-//       </div>
-//       <p className="read-the-docs">
-//         Click on the Vite and React logos to learn more1111111111111111
-//       </p>
-//     </>
-//   )
-// }

@@ -59,15 +59,15 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
         setIsSubmitting(true);
         const newChannel = await addChannel(values).unwrap();
         dispatch(setCurrentChannel(newChannel.id));
-        toast.success(t('chat.toasts.channelAdded'));
+        toast.success(t('chatServer.channelAdded'));
       } else if (mode === 'rename') {
         setIsSubmitting(true);
         await renameChannel({ id: channel.id, ...values }).unwrap();
-        toast.success(t('chat.toasts.channelRenamed'));
+        toast.success(t('chatServer.channelRenamed'));
       }
       onHide();
     } catch (err) {
-      console.error(t('chatServer.addOrChangeChannelError'), err);
+      console.error(t('chatServer.addOrRenameChannelError'), err);
     } finally {
       setIsSubmitting(false);
     }
@@ -83,7 +83,7 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
       // });
       // console.log(messagesToDelete);
       // console.log(messages);
-      toast.success(t('chat.toasts.channelRemoved'));
+      toast.success(t('chatServer.channelRemoved'));
       onHide();
     } catch (err) {
       console.error(t('chatServer.removeChannelError'), err);

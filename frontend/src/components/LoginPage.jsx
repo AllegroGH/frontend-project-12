@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { setCredentials } from '../slices/authSlice';
 import loginImg from '../assets/login_img.jpg';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 const LoginPage = () => {
   const [authError, setAuthError] = useState('');
@@ -47,9 +48,13 @@ const LoginPage = () => {
       // console.log('Login: navigate to /');
 
     } catch (error) {
-      setAuthError(t('chatServer.incorrectUserOrPass'));
-      usernameRef.current?.focus();
-      usernameRef.current?.select();
+      if (error.response?.status === 500) {
+        toast.error(t('chatServer.serverUnavailable'));
+      } else {
+        setAuthError(t('chatServer.incorrectUserOrPass'));
+        usernameRef.current?.focus();
+        usernameRef.current?.select();
+      }
       console.error(t('chatServer.authError'), error);
     } finally {
       // console.log('Отправленные данные:', values);

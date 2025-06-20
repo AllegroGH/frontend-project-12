@@ -27,6 +27,12 @@ const ChatPage = () => {
     error: messagesError,
   } = useGetMessagesQuery();
 
+  // useEffect(() => {
+  //   if (channelsError) toast.error(t('chatServer.loadingChannelsError'));
+  //   if (messagesError) toast.error(t('chatServer.loadingMessagesError'));
+  // }, [channelsError, messagesError, t]);
+
+
   useEffect(() => {
     if (!token) {
       navigate('/login');
@@ -58,10 +64,20 @@ const ChatPage = () => {
     }
   }, [channels, currentChannelId, dispatch]);
 
-
-
-  if (channelsLoading || messagesLoading) return <div>{t('chat.general.loadingData')}</div>;
-  if (channelsError || messagesError) return <div>{t('chat.general.loadingDataError')}</div>;
+  if (channelsLoading || messagesLoading) return (
+    <h3
+      className='d-flex white-space text-center h-100 align-items-center justify-content-center'
+    >
+      {t('chatServer.loadingData')}
+    </h3>
+  );
+  if (channelsError || messagesError) return (
+    <h3
+      className='d-flex white-space text-danger text-center h-100 align-items-center justify-content-center'
+    >
+      {t('chatServer.loadingDataError')}
+    </h3>
+  );
 
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">

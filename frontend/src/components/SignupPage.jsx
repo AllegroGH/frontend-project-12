@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { setCredentials } from '../slices/authSlice';
 import signupImg from '../assets/signup_img.jpg';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 const SignupPage = () => {
   const [signupError, setSignupError] = useState('');
@@ -56,8 +57,10 @@ const SignupPage = () => {
     } catch (error) {
       if (error.response?.status === 409) {
         setSignupError(t('chatServer.userExists'));
+      } else if (error.response?.status === 500) {
+        toast.error(t('chatServer.serverUnavailable'));
       } else {
-        setSignupError(error.response?.data?.message || t('chatServer.signupError'));
+        setSignupError(t('chatServer.signupError'));
       }
       usernameRef.current?.focus();
       usernameRef.current?.select();

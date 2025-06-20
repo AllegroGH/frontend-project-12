@@ -40,9 +40,6 @@ const ru = {
 
     chat: {
       general: {
-        loadingData: 'Загрузка...',
-        loadingDataError: 'Ошибка загрузки данных',
-
         messagesCount_one: '{{count}} сообщение',
         messagesCount_few: '{{count}} сообщения',
         messagesCount_many: '{{count}} сообщений',
@@ -72,12 +69,6 @@ const ru = {
         sendButtonInProgress: 'Отправка...',
         removeButton: 'Удалить',
       },
-
-      toasts: {
-        channelAdded: 'Канал создан',
-        channelRenamed: 'Канал переименован',
-        channelRemoved: 'Канал удалён',
-      },
     },
 
     validation: {
@@ -92,12 +83,33 @@ const ru = {
     },
 
     chatServer: {
+      authError: 'Ошибка авторизации',
       incorrectUserOrPass: 'Неверные имя пользователя или пароль',
-      authError: 'Ошибка авторизации:',
+
+      signupError: 'Ошибка регистрации',
       userExists: 'Такой пользователь уже существует',
-      signupError: 'Ошибка регистрации:',
-      addOrChangeChannelError: 'Ошибка добавления или изменения канала',
+
+      loadingData: 'Загрузка...',
+      loadingDataError: "Ошибка загрузки данных\n\n(попробуйте обновить страницу)",
+
+      channelAdded: 'Канал создан',
+      channelRenamed: 'Канал переименован',
+      channelRemoved: 'Канал удалён',
+
+      loadingChannelsError: `Ошибка загрузки каналов`,
+      addOrRenameChannelError: 'Ошибка добавления или изменения канала',
+      addChannelError: `Ошибка добавления канала`,
+      renameChannelError: `Ошибка переименования канала`,      
       removeChannelError: 'Ошибка удаления канала',
+
+      loadingMessagesError: `Ошибка загрузки сообщений`,
+      addMessageError: `Ошибка добавления сообщения`,
+      removeMessageError: `Ошибка удаления сообщения`,
+
+      serverUnavailable: 'Сервер недоступен',
+
+      netIsDown: 'Отсутствует интернет-соединение',
+      netIsUp: 'Соединение восстановлено',
     },
   }
 };
