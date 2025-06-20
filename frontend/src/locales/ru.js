@@ -77,6 +77,7 @@ const ru = {
       min3max20: 'От 3 до 20 символов',
       min6: 'Не менее 6 символов',
       mustBeUnique: 'Должно быть уникальным',
+      mustBeCleanUnique: 'Должно быть уникальным ;)',
 
       confirmPassword: 'Подтвердите пароль',
       passwordsMustMatch: 'Пароли должны совпадать',

@@ -8,6 +8,7 @@ import { useAddChannelMutation, useRemoveChannelMutation, useRenameChannelMutati
 // import { useGetMessagesQuery, useRemoveMessageMutation } from '../../slices/apiSlice';
 import { setCurrentChannel } from '../../slices/chatSlice';
 import { useTranslation } from 'react-i18next';
+import leoProfanity from 'leo-profanity';
 
 const ChannelModal = ({ mode, channel, channels, onHide }) => {
   const inputRef = useRef(null);
@@ -42,10 +43,13 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
       .max(20, t('validation.min3max20'))
       .test(
         'unique-channel',
-        t('validation.mustBeUnique'),
+        (params) => {
+          if (params.originalValue && leoProfanity.check(params.originalValue)) return t('validation.mustBeCleanUnique');
+          return t('validation.mustBeUnique');
+        },
         (value) => {
           if (!value || mode === 'remove') return true;
-          const channelExists = channels.some((c) => c.name === value);
+          const channelExists = channels.some((c) => c.name === leoProfanity.clean(value));
           // if (mode === 'rename' && value === channel.name) return true;
           return !channelExists;
         }
@@ -55,14 +59,15 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
   const handleSubmit = async (values, { setFieldTouched }) => {
     setFieldTouched('name', true);
     try {
+      const cleanValues = { name: leoProfanity.clean(values.name) }
       if (mode === 'add') {
         setIsSubmitting(true);
-        const newChannel = await addChannel(values).unwrap();
+        const newChannel = await addChannel(cleanValues).unwrap();
         dispatch(setCurrentChannel(newChannel.id));
         toast.success(t('chatServer.channelAdded'));
       } else if (mode === 'rename') {
         setIsSubmitting(true);
-        await renameChannel({ id: channel.id, ...values }).unwrap();
+        await renameChannel({ id: channel.id, ...cleanValues }).unwrap();
         toast.success(t('chatServer.channelRenamed'));
       }
       onHide();

@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import leoProfanity from 'leo-profanity';
 
 import LoginPage from './components/LoginPage';
 import SignupPage from './components/SignupPage';
@@ -18,6 +19,7 @@ import AppHeader from './components/AppHeader';
 function App() {
   const { token, username } = useSelector((state) => state.auth);
   const { t } = useTranslation();
+  leoProfanity.loadDictionary('ru');
 
   useEffect(() => {
     const handleOffline = () => toast.error(t('chatServer.netIsDown'));

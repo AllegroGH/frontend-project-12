@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { useAddMessageMutation } from '../../slices/apiSlice';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
+import leoProfanity from 'leo-profanity';
 
 const MessageForm = React.forwardRef(({ channelId }, ref) => {
   const { username } = useSelector((state) => state.auth);
@@ -22,8 +23,9 @@ const MessageForm = React.forwardRef(({ channelId }, ref) => {
     initialValues: { body: '' },
     onSubmit: async (values, { resetForm }) => {
       try {
+        console.log(111111111111111, values);
         setIsSubmitting(true);
-        await addMessage({ username, channelId, body: values.body });
+        await addMessage({ username, channelId, body: leoProfanity.clean(values.body) });
         resetForm();
         inputRef.current?.focus();
       } catch (err) {
