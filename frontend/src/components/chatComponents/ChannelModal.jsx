@@ -7,11 +7,13 @@ import { toast } from 'react-toastify';
 import { useAddChannelMutation, useRemoveChannelMutation, useRenameChannelMutation } from '../../slices/apiSlice';
 // import { useGetMessagesQuery, useRemoveMessageMutation } from '../../slices/apiSlice';
 import { setCurrentChannel } from '../../slices/chatSlice';
+import { useTranslation } from 'react-i18next';
 
 const ChannelModal = ({ mode, channel, channels, onHide }) => {
   const inputRef = useRef(null);
   const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useTranslation();
 
   const [addChannel] = useAddChannelMutation();
   const [removeChannel] = useRemoveChannelMutation();
@@ -35,12 +37,12 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
 
   const validationSchema = Yup.object({
     name: Yup.string()
-      .required('Обязательное поле')
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
+      .required(t('validation.requiredField'))
+      .min(3, t('validation.min3max20'))
+      .max(20, t('validation.min3max20'))
       .test(
         'unique-channel',
-        'Должно быть уникальным',
+        t('validation.mustBeUnique'),
         (value) => {
           if (!value || mode === 'remove') return true;
           const channelExists = channels.some((c) => c.name === value);
@@ -57,15 +59,15 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
         setIsSubmitting(true);
         const newChannel = await addChannel(values).unwrap();
         dispatch(setCurrentChannel(newChannel.id));
-        toast.success('Канал создан');
+        toast.success(t('chat.toasts.channelAdded'));
       } else if (mode === 'rename') {
         setIsSubmitting(true);
         await renameChannel({ id: channel.id, ...values }).unwrap();
-        toast.success('Канал переименован');
+        toast.success(t('chat.toasts.channelRenamed'));
       }
       onHide();
     } catch (err) {
-      console.error('Ошибка добавления/изменения канала:', err);
+      console.error(t('chatServer.addOrChangeChannelError'), err);
     } finally {
       setIsSubmitting(false);
     }
@@ -81,10 +83,10 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
       // });
       // console.log(messagesToDelete);
       // console.log(messages);
-      toast.success('Канал удалён');
+      toast.success(t('chat.toasts.channelRemoved'));
       onHide();
     } catch (err) {
-      console.error('Ошибка удаления канала:', err);
+      console.error(t('chatServer.removeChannelError'), err);
     } finally {
       setIsSubmitting(false);
     }
@@ -94,9 +96,9 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
     <Modal show onHide={onHide} centered>
       <Modal.Header closeButton>
         <Modal.Title>
-          {mode === 'add' && 'Добавить канал'}
-          {mode === 'remove' && 'Удалить канал'}
-          {mode === 'rename' && 'Переименовать канал'}
+          {mode === 'add' && t('chat.channelModal.addTitle')}
+          {mode === 'rename' && t('chat.channelModal.renameTitle')}
+          {mode === 'remove' && t('chat.channelModal.removeTitle')}
         </Modal.Title>
       </Modal.Header>
 
@@ -123,10 +125,10 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
                 )}
                 <div className="d-flex justify-content-end">
                   <Button variant="secondary" className="me-2" onClick={onHide} disabled={isSubmitting}>
-                    Отменить
+                    {t('chat.channelModal.cancelButton')}
                   </Button>
                   <Button type="submit" variant="primary" disabled={isSubmitting}>
-                    {isSubmitting ? 'Отправка...' : 'Отправить'}
+                    {isSubmitting ? t('chat.channelModal.sendButtonInProgress') : t('chat.channelModal.sendButton')}
                   </Button>
                 </div>
               </Modal.Body>
@@ -136,13 +138,13 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
       ) : (
         <div>
           <Modal.Body>
-            <p className="lead">Уверены?</p>
+            <p className="lead">{t('chat.channelModal.confirmRemoveQuestion')}</p>
             <div className="d-flex justify-content-end">
               <Button variant="secondary" className="me-2" onClick={onHide} disabled={isSubmitting}>
-                Отменить
+                {t('chat.channelModal.cancelButton')}
               </Button>
               <Button variant="danger" onClick={handleRemove} disabled={isSubmitting}>
-                Удалить
+                {t('chat.channelModal.removeButton')}
               </Button>
             </div>
           </Modal.Body>

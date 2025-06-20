@@ -3,6 +3,7 @@ import { setCurrentChannel } from '../../slices/chatSlice';
 import { Dropdown } from 'react-bootstrap';
 import { useState } from 'react';
 import ChannelModal from './ChannelModal';
+import { useTranslation } from 'react-i18next';
 
 const ChannelList = ({ channels }) => {
   const dispatch = useDispatch();
@@ -10,6 +11,7 @@ const ChannelList = ({ channels }) => {
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState('add');
   const [currentChannel, setCurrentChannelData] = useState(null);
+  const { t } = useTranslation();
 
   const handleShowModal = (mode, channel = null) => {
     setModalMode(mode);
@@ -20,7 +22,7 @@ const ChannelList = ({ channels }) => {
   return (
     <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
       <div className="d-flex mt-1 justify-content-between mb-2 ps-4 pe-2 p-4">
-        <b>Каналы</b>
+        <b>{t('chat.channelList.title')}</b>
         <button
           type="button"
           className="p-0 text-primary btn btn-group-vertical"
@@ -66,19 +68,19 @@ const ChannelList = ({ channels }) => {
                       marginLeft: '-1px'
                     }}
                   >
-                    <span className="visually-hidden">Управление каналом</span>
+                    <span className="visually-hidden">{t('chat.channelList.itemDropdown')}</span>
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={() => handleShowModal('rename', channel)}>
-                      Переименовать
+                      {t('chat.channelList.itemDropdownRename')}
                     </Dropdown.Item>
                     {channel.removable && (
                       <Dropdown.Item
                         onClick={() => handleShowModal('remove', channel)}
                         className="text-danger"
                       >
-                        Удалить
+                        {t('chat.channelList.itemDropdownRemove')}
                       </Dropdown.Item>
                     )}
                   </Dropdown.Menu>

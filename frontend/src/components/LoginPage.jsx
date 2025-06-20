@@ -7,7 +7,8 @@ import * as Yup from 'yup';
 import { Alert, Container, Row, Col, Card, Navbar } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../slices/authSlice';
-import loginImg from '../assets/login_img.jpg'
+import loginImg from '../assets/login_img.jpg';
+import { useTranslation } from 'react-i18next';
 
 const LoginPage = () => {
   const [authError, setAuthError] = useState('');
@@ -15,10 +16,11 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const usernameRef = useRef(null);
+  const { t } = useTranslation();
 
   const validationSchema = Yup.object().shape({
-    username: Yup.string().trim().required('Обязательное поле'),
-    password: Yup.string().trim().required('Обязательное поле'),
+    username: Yup.string().trim().required(t('validation.requiredField')),
+    password: Yup.string().trim().required(t('validation.requiredField')),
   });
 
   const initialValues = {
@@ -45,10 +47,10 @@ const LoginPage = () => {
       // console.log('Login: navigate to /');
 
     } catch (error) {
-      setAuthError('Неверные имя пользователя или пароль');
+      setAuthError(t('chatServer.incorrectUserOrPass'));
       usernameRef.current?.focus();
       usernameRef.current?.select();
-      console.error('Ошибка авторизации:', error);
+      console.error(t('chatServer.authError'), error);
     } finally {
       // console.log('Отправленные данные:', values);
       setIsSubmitting(false);
@@ -69,7 +71,7 @@ const LoginPage = () => {
                 <img
                   src={loginImg}
                   className="rounded-circle"
-                  alt="Войти"
+                  alt={t('login.title')}
                 />
               </Col>
               <Col xs={12} md={6} className="mt-3 mt-md-0">
@@ -80,7 +82,7 @@ const LoginPage = () => {
                 >
                   {({ handleChange }) => (
                     <Form>
-                      <h1 className="text-center mb-4">Войти</h1>
+                      <h1 className="text-center mb-4">{t('login.title')}</h1>
                       <div className="form-floating mb-3">
                         <Field
                           type="text"
@@ -88,7 +90,7 @@ const LoginPage = () => {
                           id="username"
                           autoComplete="username"
                           className={`form-control ${authError ? 'is-invalid' : ''}`}
-                          placeholder="Ваш ник"
+                          placeholder={t('login.usernamePlaceholder')}
                           as="input"
                           required={true}
                           innerRef={usernameRef}
@@ -97,7 +99,7 @@ const LoginPage = () => {
                             handleChange(e);  // продолжаем выполнение родного обработчика Formik
                           }}
                         />
-                        <label htmlFor="username">Ваш ник</label>
+                        <label htmlFor="username">{t('login.usernameLabel')}</label>
                         <ErrorMessage
                           name="username"
                           component="div"
@@ -112,11 +114,11 @@ const LoginPage = () => {
                           id="password"
                           autoComplete="current-password"
                           className={`form-control ${authError ? 'is-invalid' : ''}`}
-                          placeholder="Пароль"
+                          placeholder={t('login.passwordPlaceholder')}
                           as="input"
                           required={true}
                         />
-                        <label htmlFor="password">Пароль</label>
+                        <label htmlFor="password">{t('login.passwordLabel')}</label>
                         <ErrorMessage
                           name="password"
                           component="div"
@@ -129,7 +131,7 @@ const LoginPage = () => {
                         className="w-100 mb-3 btn btn-outline-primary"
                         disabled={isSubmitting}
                       >
-                        {isSubmitting ? 'Вход...' : 'Войти'}
+                        {isSubmitting ? t('login.enterButtonInProgress') : t('login.enterButton')}
                       </button>
                     </Form>
                   )}
@@ -138,8 +140,8 @@ const LoginPage = () => {
             </Card.Body>
             <Card.Footer className="p-4">
               <div className="text-center">
-                <span>Нет аккаунта?</span>{' '}
-                <Link to="/signup">Регистрация</Link>
+                <span>{t('login.signPageLinkPrefix')}</span>{' '}
+                <Link to="/signup">{t('login.signPageLinkText')}</Link>
               </div>
             </Card.Footer>
           </Card>

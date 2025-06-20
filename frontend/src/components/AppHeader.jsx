@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { Container, Navbar, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../slices/authSlice';
+import { useTranslation } from 'react-i18next';
 
 
 const AppHeader = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { token } = useSelector((state) => state.auth);
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -21,7 +23,7 @@ const AppHeader = () => {
         <Navbar.Brand href="/">Hexlet Chat</Navbar.Brand>
         {token && (
           <Button variant="primary" onClick={handleLogout}>
-            Выйти
+            {t('appHeader.logoutButton')}
           </Button>
         )}
       </Container>

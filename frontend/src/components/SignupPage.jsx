@@ -7,26 +7,28 @@ import * as Yup from 'yup';
 import { Alert, Container, Row, Col, Card } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../slices/authSlice';
-import signupImg from '../assets/signup_img.jpg'
+import signupImg from '../assets/signup_img.jpg';
+import { useTranslation } from 'react-i18next';
 
 const SignupPage = () => {
-  const [authError, setAuthError] = useState('');
+  const [signupError, setSignupError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const usernameRef = useRef(null);
+  const { t } = useTranslation();
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()
-      .required('Обязательное поле')
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов'),
+      .required(t('validation.requiredField'))
+      .min(3, t('validation.min3max20'))
+      .max(20, t('validation.min3max20')),
     password: Yup.string().trim()
-      .required('Обязательное поле')
-      .min(6, 'Не менее 6 символов'),
+      .required(t('validation.requiredField'))
+      .min(6, t('validation.min6')),
     confirmPassword: Yup.string().trim()
-      .required('Подтвердите пароль')
-      .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать')
+      .required(t('validation.confirmPassword'))
+      .oneOf([Yup.ref('password'), null], t('validation.passwordsMustMatch'))
   });
 
   const initialValues = {
@@ -37,7 +39,7 @@ const SignupPage = () => {
 
   const handleSubmit = async (values) => {
     try {
-      setAuthError('');
+      setSignupError('');
       setIsSubmitting(true);
       const response = await axios.post('/api/v1/signup', {
         username: values.username.trim(),
@@ -53,21 +55,20 @@ const SignupPage = () => {
 
     } catch (error) {
       if (error.response?.status === 409) {
-        setAuthError('Такой пользователь уже существует');
+        setSignupError(t('chatServer.userExists'));
       } else {
-        setAuthError(error.response?.data?.message || 'Ошибка регистрации');
+        setSignupError(error.response?.data?.message || t('chatServer.signupError'));
       }
-      // setAuthError(error.response?.data?.message === "Conflict" ? 'Такой пользователь уже существует' : 'Ошибка регистрации');
       usernameRef.current?.focus();
       usernameRef.current?.select();
-      console.error('Ошибка регистрации:', error);
+      console.error(t('chatServer.signupError'), error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const resetAuthError = () => {
-    if (authError) setAuthError(null);
+  const resetSignupError = () => {
+    if (signupError) setSignupError(null);
   };
 
   return (
@@ -80,7 +81,7 @@ const SignupPage = () => {
                 <img
                   src={signupImg}
                   className="rounded-circle"
-                  alt="Регистрация"
+                  alt={t('signup.title')}
                 />
               </div>
               <Formik
@@ -90,7 +91,7 @@ const SignupPage = () => {
               >
                 {({ errors, touched, handleChange }) => (
                   <Form className="w-50">
-                    <h1 className="text-center mb-4">Регистрация</h1>
+                    <h1 className="text-center mb-4">{t('signup.title')}</h1>
 
                     <div className="form-floating mb-3">
                       <Field
@@ -98,17 +99,17 @@ const SignupPage = () => {
                         name="username"
                         id="username"
                         autoComplete="username"
-                        className={`form-control ${(errors.username && touched.username) || authError ? 'is-invalid' : ''}`}
-                        placeholder="От 3 до 20 символов"
+                        className={`form-control ${(errors.username && touched.username) || signupError ? 'is-invalid' : ''}`}
+                        placeholder={t('signup.usernamePlaceholder')}
                         required={true}
                         innerRef={usernameRef}
                         onChange={(e) => {
-                          resetAuthError();
+                          resetSignupError();
                           handleChange(e);  // продолжаем выполнение родного обработчика Formik
                         }}
                       />
-                      <label htmlFor="username">Имя пользователя</label>
-                      {authError ? (
+                      <label htmlFor="username">{t('signup.usernameLabel')}</label>
+                      {signupError ? (
                         <div className="invalid-tooltip"></div>
                       ) : (
                         <ErrorMessage
@@ -125,12 +126,12 @@ const SignupPage = () => {
                         name="password"
                         id="password"
                         autoComplete="new-password"
-                        className={`form-control ${(errors.password && touched.password) || authError ? 'is-invalid' : ''}`}
-                        placeholder="Не менее 6 символов"
+                        className={`form-control ${(errors.password && touched.password) || signupError ? 'is-invalid' : ''}`}
+                        placeholder={t('signup.passwordPlaceholder')}
                         required={true}
                       />
-                      <label htmlFor="password">Пароль</label>
-                      {authError ? (
+                      <label htmlFor="password">{t('signup.passwordLabel')}</label>
+                      {signupError ? (
                         <div className="invalid-tooltip"></div>
                       ) : (
                         <ErrorMessage
@@ -147,13 +148,13 @@ const SignupPage = () => {
                         name="confirmPassword"
                         id="confirmPassword"
                         autoComplete="new-password"
-                        className={`form-control ${(errors.confirmPassword && touched.confirmPassword) || authError ? 'is-invalid' : ''}`}
-                        placeholder="Пароли должны совпадать"
+                        className={`form-control ${(errors.confirmPassword && touched.confirmPassword) || signupError ? 'is-invalid' : ''}`}
+                        placeholder={t('signup.confirmPasswordPlaceholder')}
                         required={true}
                       />
-                      <label htmlFor="confirmPassword">Подтвердите пароль</label>
-                      {authError ? (
-                        <div className="invalid-tooltip">{authError}</div>
+                      <label htmlFor="confirmPassword">{t('signup.confirmPasswordLabel')}</label>
+                      {signupError ? (
+                        <div className="invalid-tooltip">{signupError}</div>
                       ) : (
                         <ErrorMessage
                           name="confirmPassword"
@@ -167,7 +168,7 @@ const SignupPage = () => {
                       className="w-100 btn btn-outline-primary"
                       disabled={isSubmitting}
                     >
-                      {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
+                      {isSubmitting ? t('signup.signupButtonInProgress') : t('signup.signupButton')}
                     </button>
                   </Form>
                 )}

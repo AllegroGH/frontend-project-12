@@ -5,6 +5,7 @@ import { useGetChannelsQuery, useGetMessagesQuery } from '../slices/apiSlice';
 import { setCurrentChannel } from '../slices/chatSlice';
 import ChannelList from './chatComponents/ChannelList';
 import MessageForm from './chatComponents/MessageForm';
+import { useTranslation } from 'react-i18next';
 
 const ChatPage = () => {
   const messageFormRef = useRef(null);
@@ -12,6 +13,7 @@ const ChatPage = () => {
   const dispatch = useDispatch();
   const { token } = useSelector((state) => state.auth);
   const { currentChannelId } = useSelector((state) => state.chat);
+  const { t } = useTranslation();
 
   const {
     data: channels = [],
@@ -58,8 +60,8 @@ const ChatPage = () => {
 
 
 
-  if (channelsLoading || messagesLoading) return <div>Загрузка...</div>;
-  if (channelsError || messagesError) return <div>Error loading data</div>;
+  if (channelsLoading || messagesLoading) return <div>{t('chat.general.loadingData')}</div>;
+  if (channelsError || messagesError) return <div>{t('chat.general.loadingDataError')}</div>;
 
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
@@ -70,7 +72,7 @@ const ChatPage = () => {
           <div className="d-flex flex-column h-100">
             <div className="bg-light mb-4 p-3 shadow-sm small">
               <p className="m-0"><b># {currentChannel?.name}</b></p>
-              <span className="text-muted">{channelMessages.length} сообщени(я/й)</span>
+              <span className="text-muted">{t('chat.general.messagesCount', { count: channelMessages.length })}</span>
             </div>
 
             <div id="messages-box" className="chat-messages overflow-auto px-5">
