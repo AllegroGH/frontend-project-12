@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useAddMessageMutation } from '../../slices/apiSlice';
 import { useFormik } from 'formik';
@@ -8,6 +8,7 @@ const MessageForm = React.forwardRef(({ channelId }, ref) => {
   const { username } = useSelector((state) => state.auth);
   const [addMessage] = useAddMessageMutation();
   const inputRef = useRef(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   React.useImperativeHandle(ref, () => ({
     focus: () => {
@@ -19,11 +20,14 @@ const MessageForm = React.forwardRef(({ channelId }, ref) => {
     initialValues: { body: '' },
     onSubmit: async (values, { resetForm }) => {
       try {
+        setIsSubmitting(true);
         await addMessage({ username, channelId, body: values.body });
         resetForm();
         inputRef.current?.focus();
       } catch (err) {
         console.error('Failed to send message:', err);
+      } finally {
+        setIsSubmitting(false);
       }
     },
   });
@@ -44,7 +48,7 @@ const MessageForm = React.forwardRef(({ channelId }, ref) => {
         <button
           type="submit"
           className="btn btn-group-vertical"
-          disabled={!formik.values.body.trim()}
+          disabled={!formik.values.body.trim() || isSubmitting}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

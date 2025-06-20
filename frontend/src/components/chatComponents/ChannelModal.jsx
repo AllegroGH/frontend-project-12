@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -11,6 +11,7 @@ import { setCurrentChannel } from '../../slices/chatSlice';
 const ChannelModal = ({ mode, channel, channels, onHide }) => {
   const inputRef = useRef(null);
   const dispatch = useDispatch();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [addChannel] = useAddChannelMutation();
   const [removeChannel] = useRemoveChannelMutation();
@@ -49,14 +50,16 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
       ),
   });
 
-  const handleSubmit = async (values, { setSubmitting, setFieldTouched }) => {
+  const handleSubmit = async (values, { setFieldTouched }) => {
     setFieldTouched('name', true);
     try {
       if (mode === 'add') {
+        setIsSubmitting(true);
         const newChannel = await addChannel(values).unwrap();
         dispatch(setCurrentChannel(newChannel.id));
         toast.success('Канал создан');
       } else if (mode === 'rename') {
+        setIsSubmitting(true);
         await renameChannel({ id: channel.id, ...values }).unwrap();
         toast.success('Канал переименован');
       }
@@ -64,12 +67,13 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
     } catch (err) {
       console.error('Ошибка добавления/изменения канала:', err);
     } finally {
-      setSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
   const handleRemove = async () => {
     try {
+      setIsSubmitting(true);
       await removeChannel(channel.id).unwrap();
       // const messagesToDelete = messages.filter((m) => m.channelId === channel.id);
       // messagesToDelete.forEach(async (m) => {
@@ -81,6 +85,8 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
       onHide();
     } catch (err) {
       console.error('Ошибка удаления канала:', err);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -101,7 +107,7 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
           onSubmit={handleSubmit}
           validateOnBlur={false}
         >
-          {({ isSubmitting, errors, touched }) => (
+          {({ errors, touched }) => (
             <Form>
               <Modal.Body>
                 <Field
@@ -116,7 +122,7 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
                   </div>
                 )}
                 <div className="d-flex justify-content-end">
-                  <Button variant="secondary" className="me-2" onClick={onHide}>
+                  <Button variant="secondary" className="me-2" onClick={onHide} disabled={isSubmitting}>
                     Отменить
                   </Button>
                   <Button type="submit" variant="primary" disabled={isSubmitting}>
@@ -132,10 +138,10 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
           <Modal.Body>
             <p className="lead">Уверены?</p>
             <div className="d-flex justify-content-end">
-              <Button variant="secondary" className="me-2" onClick={onHide}>
+              <Button variant="secondary" className="me-2" onClick={onHide} disabled={isSubmitting}>
                 Отменить
               </Button>
-              <Button variant="danger" onClick={handleRemove}>
+              <Button variant="danger" onClick={handleRemove} disabled={isSubmitting}>
                 Удалить
               </Button>
             </div>

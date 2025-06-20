@@ -43,27 +43,23 @@ const ChannelList = ({ channels }) => {
 
       <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">
         {channels.map(channel => (
-          <li key={channel.id} className="nav-item w-100">
-            <div
-              role="group"
-              className={`d-flex dropdown btn-group ${channel.id === currentChannelId ? 'show' : ''}`}
-            >
-              <button
-                type="button"
-                className={`w-100 rounded-0 text-start text-truncate btn ${channel.id === currentChannelId ? 'btn-secondary' : ''
-                  }`}
-                onClick={() => dispatch(setCurrentChannel(channel.id))}
-              >
-                <span className="me-1">#</span>
-                {channel.name}
-              </button>
-
-              {channel.id === currentChannelId && (
+          channel.removable ? (
+            <li key={channel.id} className="nav-item w-100">
+              <div role="group" className="d-flex dropdown btn-group">
+                <button
+                  type="button"
+                  className={`w-100 rounded-0 text-start text-truncate btn ${channel.id === currentChannelId ? 'btn-secondary' : ''}`}
+                  onClick={() => dispatch(setCurrentChannel(channel.id))}
+                >
+                  <span className="me-1">#</span>
+                  {channel.name}
+                </button>
                 <Dropdown>
                   <Dropdown.Toggle
+                    as="button" // чтобы сбросить стили по умолчанию, т.к. по умолчанию bootstrap "навешивает" btn-primary
                     split
-                    variant="secondary"
-                    className="flex-grow-0 dropdown-toggle-split rounded-end rounded-start-0"
+                    id={`channel-dropdown-${channel.id}`}
+                    className={`flex-grow-0 dropdown-toggle-split btn ${channel.id === currentChannelId ? 'btn-secondary' : 'btn-light bg-transparent'}`}
                     style={{
                       borderTopLeftRadius: '0',
                       borderBottomLeftRadius: '0',
@@ -87,21 +83,34 @@ const ChannelList = ({ channels }) => {
                     )}
                   </Dropdown.Menu>
                 </Dropdown>
-              )}
-            </div>
-          </li>
+              </div>
+            </li>
+          ) : (
+            <li key={channel.id} className="nav-item w-100">
+              <button
+                type="button"
+                className={`w-100 rounded-0 text-start text-truncate btn ${channel.id === currentChannelId ? 'btn-secondary' : ''}`}
+                onClick={() => dispatch(setCurrentChannel(channel.id))}
+              >
+                <span className="me-1">#</span>
+                {channel.name}
+              </button>
+            </li>
+          )
         ))}
       </ul>
 
-      {showModal && (
-        <ChannelModal
-          mode={modalMode}
-          channel={currentChannel || { name: '' }}
-          channels={channels}
-          onHide={() => setShowModal(false)}
-        />
-      )}
-    </div>
+      {
+        showModal && (
+          <ChannelModal
+            mode={modalMode}
+            channel={currentChannel || { name: '' }}
+            channels={channels}
+            onHide={() => setShowModal(false)}
+          />
+        )
+      }
+    </div >
   );
 };
 
