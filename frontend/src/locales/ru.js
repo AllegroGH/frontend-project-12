@@ -59,9 +59,12 @@ const ru = {
       },
 
       channelModal: {
+        labelForName: 'Имя канала',
+
         addTitle: 'Добавить канал',
         renameTitle: 'Переименовать канал',
         removeTitle: 'Удалить канал',
+
         confirmRemoveQuestion: 'Уверены?',
 
         cancelButton: 'Отменить',

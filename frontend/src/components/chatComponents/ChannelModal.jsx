@@ -119,10 +119,14 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
               <Modal.Body>
                 <Field
                   name="name"
-                  className={`mb-2 form-control ${errors.name && touched.name ? 'is-invalid' : ''}`}
+                  id={mode === 'add' ? 'addName' : 'renameName'}
+                  className={`mb-2 form-control${errors.name && touched.name ? ' is-invalid' : ''}`}
                   // autoFocus // -- не работает, поэтому через useRef
                   innerRef={inputRef}
                 />
+                <label htmlFor={mode === 'add' ? 'addName' : 'renameName'} className="visually-hidden">
+                  {t('chat.channelModal.labelForName')}
+                </label>
                 {errors.name && touched.name && (
                   <div className="invalid-feedback d-block">
                     {errors.name}

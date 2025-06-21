@@ -20,6 +20,7 @@ function App() {
   const { token, username } = useSelector((state) => state.auth);
   const { t } = useTranslation();
   leoProfanity.loadDictionary('ru');
+  leoProfanity.loadDictionary('en');
 
   useEffect(() => {
     const handleOffline = () => toast.error(t('chatServer.netIsDown'));
