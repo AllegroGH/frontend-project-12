@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
+import { Modal, Button } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { Formik, Form, Field } from 'formik'
-import * as Yup from 'yup'
-import { Modal, Button } from 'react-bootstrap'
 import { toast } from 'react-toastify'
-import { useAddChannelMutation, useRemoveChannelMutation, useRenameChannelMutation } from '../../slices/apiSlice'
-// import { useGetMessagesQuery, useRemoveMessageMutation } from '../../slices/apiSlice';
-import { setCurrentChannel } from '../../slices/chatSlice'
 import { useTranslation } from 'react-i18next'
 import leoProfanity from 'leo-profanity'
+import * as Yup from 'yup'
+
+import { useAddChannelMutation, useRemoveChannelMutation, useRenameChannelMutation } from '../../slices/apiSlice'
+import { setCurrentChannel } from '../../slices/chatSlice'
 
 const ChannelModal = ({ mode, channel, channels, onHide }) => {
   const inputRef = useRef(null)
@@ -19,11 +19,6 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
   const [addChannel] = useAddChannelMutation()
   const [removeChannel] = useRemoveChannelMutation()
   const [renameChannel] = useRenameChannelMutation()
-  // const [removeMessage] = useRemoveMessageMutation();
-
-  // const {
-  //   data: messages = [],
-  // } = useGetMessagesQuery();
 
   useEffect(() => {
     if (inputRef.current && mode !== 'remove') {
@@ -50,7 +45,6 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
         (value) => {
           if (!value || mode === 'remove') return true
           const channelExists = channels.some(c => c.name === leoProfanity.clean(value))
-          // if (mode === 'rename' && value === channel.name) return true;
           return !channelExists
         },
       ),
@@ -85,12 +79,6 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
     try {
       setIsSubmitting(true)
       await removeChannel(channel.id).unwrap()
-      // const messagesToDelete = messages.filter((m) => m.channelId === channel.id);
-      // messagesToDelete.forEach(async (m) => {
-      //   await removeMessage(m.id).unwrap();
-      // });
-      // console.log(messagesToDelete);
-      // console.log(messages);
       toast.success(t('chatServer.channelRemoved'))
       onHide()
     }

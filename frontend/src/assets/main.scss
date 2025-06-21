@@ -1,4 +1,2 @@
-// $danger: green;
-
-// @import "~bootstrap/scss/bootstrap.scss";
-@import "/node_modules/bootstrap/scss/bootstrap";
+// @import "/node_modules/bootstrap/scss/bootstrap"; // В Sass 3.0.0 (Dart Sass) уберут поддержку @import
+@use "bootstrap/scss/bootstrap" as bs;

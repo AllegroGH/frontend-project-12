@@ -1,14 +1,15 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
 import { Container, Row, Col, Card } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
-import { setCredentials } from '../slices/authSlice'
-import signupImg from '../assets/signup_img.jpg'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
+import axios from 'axios'
+import * as Yup from 'yup'
+
+import { setCredentials } from '../slices/authSlice'
+import signupImg from '../assets/signup_img.jpg'
 
 const SignupPage = () => {
   const [signupError, setSignupError] = useState('')
@@ -47,8 +48,6 @@ const SignupPage = () => {
       })
 
       const { username, token } = response.data
-      localStorage.setItem('chatApp_username', username)
-      localStorage.setItem('chatApp_jwtToken', token)
       dispatch(setCredentials({ username, token }))
 
       navigate('/')

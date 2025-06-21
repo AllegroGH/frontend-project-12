@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+
 import { useGetChannelsQuery, useGetMessagesQuery } from '../slices/apiSlice'
 import { setCurrentChannel } from '../slices/chatSlice'
 import ChannelList from './chatComponents/ChannelList'
 import MessageForm from './chatComponents/MessageForm'
-import { useTranslation } from 'react-i18next'
+
 
 const ChatPage = () => {
   const messageFormRef = useRef(null)
@@ -26,11 +28,6 @@ const ChatPage = () => {
     isLoading: messagesLoading,
     error: messagesError,
   } = useGetMessagesQuery()
-
-  // useEffect(() => {
-  //   if (channelsError) toast.error(t('chatServer.loadingChannelsError'));
-  //   if (messagesError) toast.error(t('chatServer.loadingMessagesError'));
-  // }, [channelsError, messagesError, t]);
 
   useEffect(() => {
     if (!token) {
@@ -65,14 +62,15 @@ const ChatPage = () => {
 
   if (channelsLoading || messagesLoading) return (
     <h3
-      className="d-flex white-space text-center h-100 align-items-center justify-content-center"
+      className="d-flex text-center h-100 align-items-center justify-content-center"
     >
       {t('chatServer.loadingData')}
     </h3>
   )
   if (channelsError || messagesError) return (
     <h3
-      className="d-flex white-space text-danger text-center h-100 align-items-center justify-content-center"
+      className="d-flex text-danger text-center h-100 align-items-center justify-content-center"
+      style={{ whiteSpace: 'pre-line' }}
     >
       {t('chatServer.loadingDataError')}
     </h3>

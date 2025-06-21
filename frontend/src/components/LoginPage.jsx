@@ -1,14 +1,15 @@
 import { useState, useRef } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import axios from 'axios'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
 import { Alert, Container, Row, Col, Card } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
-import { setCredentials } from '../slices/authSlice'
-import loginImg from '../assets/login_img.jpg'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
+import axios from 'axios'
+import * as Yup from 'yup'
+
+import { setCredentials } from '../slices/authSlice'
+import loginImg from '../assets/login_img.jpg'
 
 const LoginPage = () => {
   const [authError, setAuthError] = useState('')
@@ -36,15 +37,11 @@ const LoginPage = () => {
         username: values.username.trim(),
         password: values.password.trim(),
       })
-      // console.log('Login:response:: ', response.data);
 
       const { username, token } = response.data
-      localStorage.setItem('chatApp_username', username)
-      localStorage.setItem('chatApp_jwtToken', token)
       dispatch(setCredentials({ username, token }))
 
       navigate('/')
-      // console.log('Login: navigate to /');
     }
     catch (error) {
       if (error.response?.status === 500) {
@@ -58,7 +55,6 @@ const LoginPage = () => {
       console.error(t('chatServer.authError'), error)
     }
     finally {
-      // console.log('Отправленные данные:', values);
       setIsSubmitting(false)
     }
   }
