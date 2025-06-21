@@ -5,7 +5,7 @@ import { useState } from 'react'
 import ChannelModal from './ChannelModal'
 import { useTranslation } from 'react-i18next'
 
-import AddChannelIcon from '../../icons/AddChannelIcon'
+import AddChannelIcon from '../icons/AddChannelIcon'
 
 const ChannelList = ({ channels }) => {
   const dispatch = useDispatch()

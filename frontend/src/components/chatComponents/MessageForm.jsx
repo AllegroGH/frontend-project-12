@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import leoProfanity from 'leo-profanity'
 
 import { useAddMessageMutation } from '../../slices/apiSlice'
-import SendMessageIcon from '../../icons/SendMessageIcon'
+import SendMessageIcon from '../icons/SendMessageIcon'
 
 const MessageForm = React.forwardRef(function MessageForm({ channelId }, ref) {
   const { username } = useSelector(state => state.auth)
@@ -57,7 +57,7 @@ const MessageForm = React.forwardRef(function MessageForm({ channelId }, ref) {
           className="btn btn-group-vertical"
           disabled={!formik.values.body.trim() || isSubmitting}
         >
-        <SendMessageIcon />
+          <SendMessageIcon />
           <span className="visually-hidden">{t('chat.messageForm.sendSpan')}</span>
         </button>
       </div>

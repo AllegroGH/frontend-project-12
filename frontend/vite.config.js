@@ -22,8 +22,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        quietDeps: true  // Отключает предупреждения
-      }
-    }
+        quietDeps: true, // Отключает предупреждения
+      },
+    },
   },
 })

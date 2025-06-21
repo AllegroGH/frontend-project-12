@@ -8,7 +8,6 @@ import { setCurrentChannel } from '../slices/chatSlice'
 import ChannelList from './chatComponents/ChannelList'
 import MessageForm from './chatComponents/MessageForm'
 
-
 const ChatPage = () => {
   const messageFormRef = useRef(null)
   const navigate = useNavigate()
