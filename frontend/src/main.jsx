@@ -9,6 +9,7 @@ import { store } from './store'
 import App from './App.jsx'
 import './assets/main.scss'
 import resources from './locales/index.js'
+import leoProfanity from 'leo-profanity'
 
 const rollbarConfig = {
   accessToken: import.meta.env.VITE_ROLLBAR_TOKEN,
@@ -26,6 +27,12 @@ const initApp = async () => {
       resources,
       fallbackLng: 'ru',
     })
+
+  const enDictionary = leoProfanity.getDictionary('en')
+  const ruDictionary = leoProfanity.getDictionary('ru')
+  const combinedDictionary = [...enDictionary, ...ruDictionary]
+  leoProfanity.clearList()
+  leoProfanity.add(combinedDictionary)
 
   createRoot(document.getElementById('root')).render(
     <StrictMode>

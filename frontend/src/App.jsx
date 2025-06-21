@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux'
 import { Routes, Route } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'react-toastify'
-import leoProfanity from 'leo-profanity'
 import { initSocket, disconnectSocket } from './socket'
 
 import Layout from './components/Layout'
@@ -16,9 +15,6 @@ import ProtectedRoute from './components/ProtectedRoute'
 function App() {
   const { token, username } = useSelector(state => state.auth)
   const { t } = useTranslation()
-
-  leoProfanity.loadDictionary('ru')
-  leoProfanity.loadDictionary('en')
 
   useEffect(() => {
     const handleOffline = () => toast.error(t('chatServer.netIsDown'))
