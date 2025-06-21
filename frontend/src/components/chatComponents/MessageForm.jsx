@@ -23,7 +23,6 @@ const MessageForm = React.forwardRef(({ channelId }, ref) => {
     initialValues: { body: '' },
     onSubmit: async (values, { resetForm }) => {
       try {
-        console.log(111111111111111, values);
         setIsSubmitting(true);
         await addMessage({ username, channelId, body: leoProfanity.clean(values.body) });
         resetForm();
