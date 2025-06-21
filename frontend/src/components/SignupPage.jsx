@@ -1,23 +1,23 @@
-import React from 'react';
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import { Alert, Container, Row, Col, Card } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { setCredentials } from '../slices/authSlice';
-import signupImg from '../assets/signup_img.jpg';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
+import React from 'react'
+import { useState, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
+import * as Yup from 'yup'
+import { Alert, Container, Row, Col, Card } from 'react-bootstrap'
+import { useDispatch } from 'react-redux'
+import { setCredentials } from '../slices/authSlice'
+import signupImg from '../assets/signup_img.jpg'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 const SignupPage = () => {
-  const [signupError, setSignupError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const usernameRef = useRef(null);
-  const { t } = useTranslation();
+  const [signupError, setSignupError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const usernameRef = useRef(null)
+  const { t } = useTranslation()
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim()
@@ -30,49 +30,49 @@ const SignupPage = () => {
     confirmPassword: Yup.string().trim()
       .required(t('validation.confirmPassword'))
       .oneOf([Yup.ref('password'), null], t('validation.passwordsMustMatch'))
-  });
+  })
 
   const initialValues = {
     username: '',
     password: '',
     confirmPassword: ''
-  };
+  }
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async values => {
     try {
-      setSignupError('');
-      setIsSubmitting(true);
+      setSignupError('')
+      setIsSubmitting(true)
       const response = await axios.post('/api/v1/signup', {
         username: values.username.trim(),
         password: values.password.trim(),
-      });
+      })
 
-      const { username, token } = response.data;
-      localStorage.setItem('chatApp_username', username);
-      localStorage.setItem('chatApp_jwtToken', token);
-      dispatch(setCredentials({ username, token }));
+      const { username, token } = response.data
+      localStorage.setItem('chatApp_username', username)
+      localStorage.setItem('chatApp_jwtToken', token)
+      dispatch(setCredentials({ username, token }))
 
-      navigate('/');
+      navigate('/')
 
     } catch (error) {
       if (error.response?.status === 409) {
-        setSignupError(t('chatServer.userExists'));
+        setSignupError(t('chatServer.userExists'))
       } else if (error.response?.status === 500) {
-        toast.error(t('chatServer.serverUnavailable'));
+        toast.error(t('chatServer.serverUnavailable'))
       } else {
-        setSignupError(t('chatServer.signupError'));
+        setSignupError(t('chatServer.signupError'))
       }
-      usernameRef.current?.focus();
-      usernameRef.current?.select();
-      console.error(t('chatServer.signupError'), error);
+      usernameRef.current?.focus()
+      usernameRef.current?.select()
+      console.error(t('chatServer.signupError'), error)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   const resetSignupError = () => {
-    if (signupError) setSignupError(null);
-  };
+    if (signupError) setSignupError(null)
+  }
 
   return (
     <Container fluid className="h-100">
@@ -106,9 +106,9 @@ const SignupPage = () => {
                         placeholder={t('signup.usernamePlaceholder')}
                         required={true}
                         innerRef={usernameRef}
-                        onChange={(e) => {
-                          resetSignupError();
-                          handleChange(e);  // продолжаем выполнение родного обработчика Formik
+                        onChange={e => {
+                          resetSignupError()
+                          handleChange(e)  // продолжаем выполнение родного обработчика Formik
                         }}
                       />
                       <label htmlFor="username">{t('signup.usernameLabel')}</label>
@@ -181,7 +181,7 @@ const SignupPage = () => {
         </Col>
       </Row>
     </Container>
-  );
-};
+  )
+}
 
-export default SignupPage;
+export default SignupPage

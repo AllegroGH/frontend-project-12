@@ -1,70 +1,68 @@
-import React from 'react';
-import { useState, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import { Alert, Container, Row, Col, Card, Navbar } from 'react-bootstrap';
-import { useDispatch } from 'react-redux';
-import { setCredentials } from '../slices/authSlice';
-import loginImg from '../assets/login_img.jpg';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
+import { useState, useRef } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import axios from 'axios'
+import { Formik, Form, Field, ErrorMessage } from 'formik'
+import * as Yup from 'yup'
+import { Alert, Container, Row, Col, Card, Navbar } from 'react-bootstrap'
+import { useDispatch } from 'react-redux'
+import { setCredentials } from '../slices/authSlice'
+import loginImg from '../assets/login_img.jpg'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
 
 const LoginPage = () => {
-  const [authError, setAuthError] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const usernameRef = useRef(null);
-  const { t } = useTranslation();
+  const [authError, setAuthError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const usernameRef = useRef(null)
+  const { t } = useTranslation()
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().trim().required(t('validation.requiredField')),
     password: Yup.string().trim().required(t('validation.requiredField')),
-  });
+  })
 
   const initialValues = {
     username: '',
     password: '',
-  };
+  }
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async values => {
     try {
-      setAuthError('');
-      setIsSubmitting(true);
+      setAuthError('')
+      setIsSubmitting(true)
       const response = await axios.post('/api/v1/login', {
         username: values.username.trim(),
         password: values.password.trim(),
-      });
+      })
       // console.log('Login:response:: ', response.data);
 
-      const { username, token } = response.data;
-      localStorage.setItem('chatApp_username', username);
-      localStorage.setItem('chatApp_jwtToken', token);
-      dispatch(setCredentials({ username, token }));
+      const { username, token } = response.data
+      localStorage.setItem('chatApp_username', username)
+      localStorage.setItem('chatApp_jwtToken', token)
+      dispatch(setCredentials({ username, token }))
 
-      navigate('/');
+      navigate('/')
       // console.log('Login: navigate to /');
-
     } catch (error) {
       if (error.response?.status === 500) {
-        toast.error(t('chatServer.serverUnavailable'));
+        toast.error(t('chatServer.serverUnavailable'))
       } else {
-        setAuthError(t('chatServer.incorrectUserOrPass'));
-        usernameRef.current?.focus();
-        usernameRef.current?.select();
+        setAuthError(t('chatServer.incorrectUserOrPass'))
+        usernameRef.current?.focus()
+        usernameRef.current?.select()
       }
-      console.error(t('chatServer.authError'), error);
+      console.error(t('chatServer.authError'), error)
     } finally {
       // console.log('Отправленные данные:', values);
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   const resetAuthError = () => {
-    if (authError) setAuthError(null);
-  };
+    if (authError) setAuthError(null)
+  }
 
   return (
     <Container fluid className="h-100">
@@ -99,9 +97,9 @@ const LoginPage = () => {
                           as="input"
                           required={true}
                           innerRef={usernameRef}
-                          onChange={(e) => {
-                            resetAuthError();
-                            handleChange(e);  // продолжаем выполнение родного обработчика Formik
+                          onChange={e => {
+                            resetAuthError()
+                            handleChange(e)  // продолжаем выполнение родного обработчика Formik
                           }}
                         />
                         <label htmlFor="username">{t('login.usernameLabel')}</label>
@@ -153,7 +151,7 @@ const LoginPage = () => {
         </Col>
       </Row>
     </Container>
-  );
-};
+  )
+}
 
-export default LoginPage;
+export default LoginPage

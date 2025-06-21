@@ -1,24 +1,24 @@
-import { useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
-import { Modal, Button } from 'react-bootstrap';
-import { toast } from 'react-toastify';
-import { useAddChannelMutation, useRemoveChannelMutation, useRenameChannelMutation } from '../../slices/apiSlice';
+import { useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { Formik, Form, Field } from 'formik'
+import * as Yup from 'yup'
+import { Modal, Button } from 'react-bootstrap'
+import { toast } from 'react-toastify'
+import { useAddChannelMutation, useRemoveChannelMutation, useRenameChannelMutation } from '../../slices/apiSlice'
 // import { useGetMessagesQuery, useRemoveMessageMutation } from '../../slices/apiSlice';
-import { setCurrentChannel } from '../../slices/chatSlice';
-import { useTranslation } from 'react-i18next';
-import leoProfanity from 'leo-profanity';
+import { setCurrentChannel } from '../../slices/chatSlice'
+import { useTranslation } from 'react-i18next'
+import leoProfanity from 'leo-profanity'
 
 const ChannelModal = ({ mode, channel, channels, onHide }) => {
-  const inputRef = useRef(null);
-  const dispatch = useDispatch();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { t } = useTranslation();
+  const inputRef = useRef(null)
+  const dispatch = useDispatch()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { t } = useTranslation()
 
-  const [addChannel] = useAddChannelMutation();
-  const [removeChannel] = useRemoveChannelMutation();
-  const [renameChannel] = useRenameChannelMutation();
+  const [addChannel] = useAddChannelMutation()
+  const [removeChannel] = useRemoveChannelMutation()
+  const [renameChannel] = useRenameChannelMutation()
   // const [removeMessage] = useRemoveMessageMutation();
 
   // const {
@@ -28,13 +28,13 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
   useEffect(() => {
     if (inputRef.current && mode !== 'remove') {
       const timer = setTimeout(() => {
-        inputRef.current.focus();
-        inputRef.current.select();
-      }, 100);
+        inputRef.current.focus()
+        inputRef.current.select()
+      }, 100)
 
-      return () => clearTimeout(timer);
+      return () => clearTimeout(timer)
     }
-  }, [mode]);
+  }, [mode])
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -43,59 +43,59 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
       .max(20, t('validation.min3max20'))
       .test(
         'unique-channel',
-        (params) => {
-          if (params.originalValue && leoProfanity.check(params.originalValue)) return t('validation.mustBeCleanUnique');
-          return t('validation.mustBeUnique');
+        params => {
+          if (params.originalValue && leoProfanity.check(params.originalValue)) return t('validation.mustBeCleanUnique')
+          return t('validation.mustBeUnique')
         },
-        (value) => {
-          if (!value || mode === 'remove') return true;
-          const channelExists = channels.some((c) => c.name === leoProfanity.clean(value));
+        value => {
+          if (!value || mode === 'remove') return true
+          const channelExists = channels.some(c => c.name === leoProfanity.clean(value))
           // if (mode === 'rename' && value === channel.name) return true;
-          return !channelExists;
+          return !channelExists
         }
       ),
-  });
+  })
 
   const handleSubmit = async (values, { setFieldTouched }) => {
-    setFieldTouched('name', true);
+    setFieldTouched('name', true)
     try {
       const cleanValues = { name: leoProfanity.clean(values.name) }
       if (mode === 'add') {
-        setIsSubmitting(true);
-        const newChannel = await addChannel(cleanValues).unwrap();
-        dispatch(setCurrentChannel(newChannel.id));
-        toast.success(t('chatServer.channelAdded'));
+        setIsSubmitting(true)
+        const newChannel = await addChannel(cleanValues).unwrap()
+        dispatch(setCurrentChannel(newChannel.id))
+        toast.success(t('chatServer.channelAdded'))
       } else if (mode === 'rename') {
-        setIsSubmitting(true);
-        await renameChannel({ id: channel.id, ...cleanValues }).unwrap();
-        toast.success(t('chatServer.channelRenamed'));
+        setIsSubmitting(true)
+        await renameChannel({ id: channel.id, ...cleanValues }).unwrap()
+        toast.success(t('chatServer.channelRenamed'))
       }
-      onHide();
+      onHide()
     } catch (err) {
-      console.error(t('chatServer.addOrRenameChannelError'), err);
+      console.error(t('chatServer.addOrRenameChannelError'), err)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   const handleRemove = async () => {
     try {
-      setIsSubmitting(true);
-      await removeChannel(channel.id).unwrap();
+      setIsSubmitting(true)
+      await removeChannel(channel.id).unwrap()
       // const messagesToDelete = messages.filter((m) => m.channelId === channel.id);
       // messagesToDelete.forEach(async (m) => {
       //   await removeMessage(m.id).unwrap();
       // });
       // console.log(messagesToDelete);
       // console.log(messages);
-      toast.success(t('chatServer.channelRemoved'));
-      onHide();
+      toast.success(t('chatServer.channelRemoved'))
+      onHide()
     } catch (err) {
-      console.error(t('chatServer.removeChannelError'), err);
+      console.error(t('chatServer.removeChannelError'), err)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
   return (
     <Modal show onHide={onHide} centered>
@@ -160,7 +160,7 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
         </div>
       )}
     </Modal>
-  );
-};
+  )
+}
 
-export default ChannelModal;
+export default ChannelModal

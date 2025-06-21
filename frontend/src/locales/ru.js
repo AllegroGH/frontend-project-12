@@ -116,8 +116,8 @@ const ru = {
       netIsUp: 'Соединение восстановлено',
     },
   }
-};
+}
 
 // [а-яА-ЯёЁ]
 
-export default ru;
+export default ru

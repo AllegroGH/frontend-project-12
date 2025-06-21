@@ -1,23 +1,23 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { setCurrentChannel } from '../../slices/chatSlice';
-import { Dropdown } from 'react-bootstrap';
-import { useState } from 'react';
-import ChannelModal from './ChannelModal';
-import { useTranslation } from 'react-i18next';
+import { useSelector, useDispatch } from 'react-redux'
+import { setCurrentChannel } from '../../slices/chatSlice'
+import { Dropdown } from 'react-bootstrap'
+import { useState } from 'react'
+import ChannelModal from './ChannelModal'
+import { useTranslation } from 'react-i18next'
 
 const ChannelList = ({ channels }) => {
-  const dispatch = useDispatch();
-  const { currentChannelId } = useSelector(state => state.chat);
-  const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState('add');
-  const [currentChannel, setCurrentChannelData] = useState(null);
-  const { t } = useTranslation();
+  const dispatch = useDispatch()
+  const { currentChannelId } = useSelector(state => state.chat)
+  const [showModal, setShowModal] = useState(false)
+  const [modalMode, setModalMode] = useState('add')
+  const [currentChannel, setCurrentChannelData] = useState(null)
+  const { t } = useTranslation()
 
   const handleShowModal = (mode, channel = null) => {
-    setModalMode(mode);
-    setCurrentChannelData(channel);
-    setShowModal(true);
-  };
+    setModalMode(mode)
+    setCurrentChannelData(channel)
+    setShowModal(true)
+  }
 
   return (
     <div className="col-4 col-md-2 border-end px-0 bg-light flex-column h-100 d-flex">
@@ -113,10 +113,10 @@ const ChannelList = ({ channels }) => {
         )
       }
     </div >
-  );
-};
+  )
+}
 
-export default ChannelList;
+export default ChannelList
 
 
 

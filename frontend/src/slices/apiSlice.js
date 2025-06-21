@@ -1,19 +1,19 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import i18n from '../i18n';
-import { toast } from 'react-toastify';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import i18n from '../i18n'
+import { toast } from 'react-toastify'
 
 export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: '/api/v1',
     prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.token;
+      const token = getState().auth.token
       if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
+        headers.set('Authorization', `Bearer ${token}`)
       }
-      return headers;
+      return headers
     },
   }),
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     // getChannels: builder.query({
     //   query: () => '/channels',
     // }),
@@ -22,9 +22,9 @@ export const apiSlice = createApi({
       query: () => '/channels',
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
-          await queryFulfilled;
+          await queryFulfilled
         } catch {
-        toast.error(i18n.t('chatServer.loadingChannelsError'));
+        toast.error(i18n.t('chatServer.loadingChannelsError'))
         }
       },
     }),
@@ -39,16 +39,16 @@ export const apiSlice = createApi({
     // }),
 
     addChannel: builder.mutation({
-      query: (channel) => ({
+      query: channel => ({
         url: '/channels',
         method: 'POST',
         body: channel,
       }),
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
-          await queryFulfilled;
+          await queryFulfilled
         } catch {
-        toast.error(i18n.t('chatServer.addChannelError'));
+        toast.error(i18n.t('chatServer.addChannelError'))
         }
       },      
       invalidatesTags: ['Channel'],
@@ -71,9 +71,9 @@ export const apiSlice = createApi({
       }),
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
-          await queryFulfilled;
+          await queryFulfilled
         } catch {
-        toast.error(i18n.t('chatServer.renameChannelError'));
+        toast.error(i18n.t('chatServer.renameChannelError'))
         }
       },         
       invalidatesTags: ['Channel'],
@@ -88,15 +88,15 @@ export const apiSlice = createApi({
     // }),
 
     removeChannel: builder.mutation({
-      query: (id) => ({
+      query: id => ({
         url: `/channels/${id}`,
         method: 'DELETE',
       }),
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
-          await queryFulfilled;
+          await queryFulfilled
         } catch {
-        toast.error(i18n.t('chatServer.removeChannelError'));
+        toast.error(i18n.t('chatServer.removeChannelError'))
         }
       },        
       invalidatesTags: ['Channel'],
@@ -110,9 +110,9 @@ export const apiSlice = createApi({
       query: () => '/messages',
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
-          await queryFulfilled;
+          await queryFulfilled
         } catch {
-        toast.error(i18n.t('chatServer.loadingMessagesError'));
+        toast.error(i18n.t('chatServer.loadingMessagesError'))
         }
       },        
     }),    
@@ -127,16 +127,16 @@ export const apiSlice = createApi({
     // }),
 
     addMessage: builder.mutation({
-      query: (message) => ({
+      query: message => ({
         url: '/messages',
         method: 'POST',
         body: message,
       }),
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
-          await queryFulfilled;
+          await queryFulfilled
         } catch {
-        toast.error(i18n.t('chatServer.addMessageError'));
+        toast.error(i18n.t('chatServer.addMessageError'))
         }
       },         
       invalidatesTags: ['Message'],
@@ -151,21 +151,21 @@ export const apiSlice = createApi({
     // }),
 
     removeMessage: builder.mutation({
-      query: (id) => ({
+      query: id => ({
         url: `/messages/${id}`,
         method: 'DELETE',
       }),
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
-          await queryFulfilled;
+          await queryFulfilled
         } catch {
-        toast.error(i18n.t('chatServer.removeMessageError'));
+        toast.error(i18n.t('chatServer.removeMessageError'))
         }
       },          
       invalidatesTags: ['Message'],
     }),    
   }),
-});
+})
 
 export const {
   useGetChannelsQuery,
@@ -175,4 +175,4 @@ export const {
   useGetMessagesQuery,
   useAddMessageMutation,
   useRemoveMessageMutation,
-} = apiSlice;
+} = apiSlice

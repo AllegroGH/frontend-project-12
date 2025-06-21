@@ -1,51 +1,51 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { initSocket, disconnectSocket } from './socket';
-import { Routes, Route } from 'react-router-dom';
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { initSocket, disconnectSocket } from './socket'
+import { Routes, Route } from 'react-router-dom'
 import './App.css'
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
-import { toast } from 'react-toastify';
-import leoProfanity from 'leo-profanity';
+import 'react-toastify/dist/ReactToastify.css'
+import { ToastContainer } from 'react-toastify'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'react-toastify'
+import leoProfanity from 'leo-profanity'
 
-import LoginPage from './components/LoginPage';
-import SignupPage from './components/SignupPage';
-import ChatPage from './components/ChatPage';
-import NotFoundPage from './components/NotFoundPage';
-import ProtectedRoute from './components/ProtectedRoute';
-import AppHeader from './components/AppHeader';
+import LoginPage from './components/LoginPage'
+import SignupPage from './components/SignupPage'
+import ChatPage from './components/ChatPage'
+import NotFoundPage from './components/NotFoundPage'
+import ProtectedRoute from './components/ProtectedRoute'
+import AppHeader from './components/AppHeader'
 
 function App() {
-  const { token, username } = useSelector((state) => state.auth);
-  const { t } = useTranslation();
-  leoProfanity.loadDictionary('ru');
-  leoProfanity.loadDictionary('en');
+  const { token, username } = useSelector(state => state.auth)
+  const { t } = useTranslation()
+  leoProfanity.loadDictionary('ru')
+  leoProfanity.loadDictionary('en')
 
   useEffect(() => {
-    const handleOffline = () => toast.error(t('chatServer.netIsDown'));
-    const handleOnline = () => toast.success(t('chatServer.netIsUp'));
+    const handleOffline = () => toast.error(t('chatServer.netIsDown'))
+    const handleOnline = () => toast.success(t('chatServer.netIsUp'))
 
-    window.addEventListener('offline', handleOffline);
-    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline)
+    window.addEventListener('online', handleOnline)
 
     return () => {
-      window.removeEventListener('offline', handleOffline);
-      window.removeEventListener('online', handleOnline);
-    };
-  }, [t]);
+      window.removeEventListener('offline', handleOffline)
+      window.removeEventListener('online', handleOnline)
+    }
+  }, [t])
 
   useEffect(() => {
     if (token) {
-      initSocket(token);
+      initSocket(token)
       // console.log('App:token:: ', token);
       // console.log('App:username:: ', username);
 
       return () => {
-        disconnectSocket();
-      };
+        disconnectSocket()
+      }
     }
-  }, [token, username]);
+  }, [token, username])
 
   return (
     <div className="h-100" id="chat">
@@ -55,9 +55,9 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<ChatPage />} />
           </Route>
-          <Route path='login' element={<LoginPage />} />
-          <Route path='signup' element={<SignupPage />} />
-          <Route path='*' element={<NotFoundPage />} />
+          <Route path="login" element={<LoginPage />} />
+          <Route path="signup" element={<SignupPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
       <ToastContainer

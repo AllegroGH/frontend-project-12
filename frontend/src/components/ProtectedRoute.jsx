@@ -1,15 +1,15 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom'
 
 const ProtectedRoute = () => {
-  const isAuthenticated = !!localStorage.getItem('chatApp_jwtToken');
+  const isAuthenticated = !!localStorage.getItem('chatApp_jwtToken')
 
   if (!isAuthenticated) {
     // console.log('protRoute: is NOT Authenticated');
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace />
   }
 
   // console.log('protRoute: route to /');
-  return <Outlet />;
-};
+  return <Outlet />
+}
 
-export default ProtectedRoute;
+export default ProtectedRoute

@@ -1,39 +1,39 @@
-import React from 'react';
-import { useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useAddMessageMutation } from '../../slices/apiSlice';
-import { useFormik } from 'formik';
-import { useTranslation } from 'react-i18next';
-import leoProfanity from 'leo-profanity';
+import React from 'react'
+import { useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useAddMessageMutation } from '../../slices/apiSlice'
+import { useFormik } from 'formik'
+import { useTranslation } from 'react-i18next'
+import leoProfanity from 'leo-profanity'
 
 const MessageForm = React.forwardRef(({ channelId }, ref) => {
-  const { username } = useSelector((state) => state.auth);
-  const [addMessage] = useAddMessageMutation();
-  const inputRef = useRef(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { t } = useTranslation();
+  const { username } = useSelector(state => state.auth)
+  const [addMessage] = useAddMessageMutation()
+  const inputRef = useRef(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { t } = useTranslation()
 
   React.useImperativeHandle(ref, () => ({
     focus: () => {
-      inputRef.current?.focus();
+      inputRef.current?.focus()
     }
-  }));
+  }))
 
   const formik = useFormik({
     initialValues: { body: '' },
     onSubmit: async (values, { resetForm }) => {
       try {
-        setIsSubmitting(true);
-        await addMessage({ username, channelId, body: leoProfanity.clean(values.body) });
-        resetForm();
-        inputRef.current?.focus();
+        setIsSubmitting(true)
+        await addMessage({ username, channelId, body: leoProfanity.clean(values.body) })
+        resetForm()
+        inputRef.current?.focus()
       } catch (err) {
-        console.error('Failed to send message:', err);
+        console.error('Failed to send message:', err)
       } finally {
-        setIsSubmitting(false);
+        setIsSubmitting(false)
       }
     },
-  });
+  })
 
   return (
     <form onSubmit={formik.handleSubmit} noValidate className="py-1 border rounded-2">
@@ -67,7 +67,7 @@ const MessageForm = React.forwardRef(({ channelId }, ref) => {
         </button>
       </div>
     </form>
-  );
-});
+  )
+})
 
-export default MessageForm;
+export default MessageForm

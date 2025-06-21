@@ -1,10 +1,10 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import notFoundImg from '../assets/404_notFound_img.svg';
-import { useTranslation } from 'react-i18next';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import notFoundImg from '../assets/404_notFound_img.svg'
+import { useTranslation } from 'react-i18next'
 
 const NotFoundPage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return (
     <div className="text-center my-auto">
@@ -18,7 +18,7 @@ const NotFoundPage = () => {
         {t('p404.mainPageLinkPrefix')} <Link to="/">{t('p404.mainPageLinkText')}</Link>
       </p>
     </div>
-  );
-};
+  )
+}
 
-export default NotFoundPage;
+export default NotFoundPage

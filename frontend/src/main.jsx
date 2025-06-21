@@ -1,31 +1,31 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { store } from './store';
-import './assets/main.scss';
-import { I18nextProvider, initReactI18next } from 'react-i18next';
-import i18next from 'i18next';
-import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
-import App from './App.jsx';
-import resources from './locales/index.js';
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import { store } from './store'
+import './assets/main.scss'
+import { I18nextProvider, initReactI18next } from 'react-i18next'
+import i18next from 'i18next'
+import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react'
+import App from './App.jsx'
+import resources from './locales/index.js'
 
 const rollbarConfig = {
   accessToken: import.meta.env.VITE_ROLLBAR_TOKEN,
   environment: 'production',
   captureUncaught: true,
   captureUnhandledRejections: true,
-};
+}
 
 const initApp = async () => {
-  const i18n = i18next.createInstance();
+  const i18n = i18next.createInstance()
 
   await i18n
     .use(initReactI18next)
     .init({
       resources,
       fallbackLng: 'ru',
-    });
+    })
 
   createRoot(document.getElementById('root')).render(
     <StrictMode>
@@ -41,7 +41,7 @@ const initApp = async () => {
         </ErrorBoundary>
       </RollbarProvider>
     </StrictMode>
-  );
-};
+  )
+}
 
-initApp();
+initApp()

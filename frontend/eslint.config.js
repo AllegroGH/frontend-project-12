@@ -28,6 +28,8 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
+      semi: ['error', 'never'],
+      'arrow-parens': ['error', 'as-needed'], 
     },
   },
 ]
