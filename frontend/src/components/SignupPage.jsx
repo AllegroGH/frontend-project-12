@@ -116,16 +116,15 @@ const SignupPage = () => {
                       <label htmlFor="username">{t('signup.usernameLabel')}</label>
                       {signupError
                         ? (
-                          <div className="invalid-tooltip"></div>
-                        )
+                            <div className="invalid-tooltip"></div>
+                          )
                         : (
-                          <ErrorMessage
-                            name="username"
-                            component="div"
-                            className="invalid-tooltip"
-                          />
-                        )
-                      }
+                            <ErrorMessage
+                              name="username"
+                              component="div"
+                              className="invalid-tooltip"
+                            />
+                          )}
                     </div>
 
                     <div className="form-floating mb-3">
@@ -141,16 +140,15 @@ const SignupPage = () => {
                       <label htmlFor="password">{t('signup.passwordLabel')}</label>
                       {signupError
                         ? (
-                          <div className="invalid-tooltip"></div>
-                        )
+                            <div className="invalid-tooltip"></div>
+                          )
                         : (
-                          <ErrorMessage
-                            name="password"
-                            component="div"
-                            className="invalid-tooltip"
-                          />
-                        )
-                      }
+                            <ErrorMessage
+                              name="password"
+                              component="div"
+                              className="invalid-tooltip"
+                            />
+                          )}
                     </div>
 
                     <div className="form-floating mb-4">
@@ -166,16 +164,15 @@ const SignupPage = () => {
                       <label htmlFor="confirmPassword">{t('signup.confirmPasswordLabel')}</label>
                       {signupError
                         ? (
-                          <div className="invalid-tooltip">{signupError}</div>
-                        )
+                            <div className="invalid-tooltip">{signupError}</div>
+                          )
                         : (
-                          <ErrorMessage
-                            name="confirmPassword"
-                            component="div"
-                            className="invalid-tooltip"
-                          />
-                        )
-                      }
+                            <ErrorMessage
+                              name="confirmPassword"
+                              component="div"
+                              className="invalid-tooltip"
+                            />
+                          )}
                     </div>
                     <button
                       type="submit"

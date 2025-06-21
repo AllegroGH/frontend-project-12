@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next'
 import leoProfanity from 'leo-profanity'
 
 const MessageForm = React.forwardRef(function MessageForm({ channelId }, ref) {
-
   const { username } = useSelector(state => state.auth)
   const [addMessage] = useAddMessageMutation()
   const inputRef = useRef(null)
