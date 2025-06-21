@@ -86,10 +86,12 @@ const ChatPage = () => {
         <div className="col p-0 h-100">
           <div className="d-flex flex-column h-100">
             <div className="bg-light mb-4 p-3 shadow-sm small">
-              <p className="m-0"><b>
-                #&nbsp;{/* # и неразрывный пробел */}
-                {currentChannel?.name}
-              </b></p>
+              <p className="m-0">
+                <b>
+                  {'# '}
+                  {currentChannel?.name}
+                </b>
+              </p>
               <span className="text-muted">{t('chat.general.messagesCount', { count: channelMessages.length })}</span>
             </div>
 
@@ -97,7 +99,7 @@ const ChatPage = () => {
               {channelMessages.map(message => (
                 <div key={message.id} className="text-break mb-2">
                   <b>{message.username}</b>
-                  :&nbsp;{/* : и неразрывный пробел */}
+                  {': '}
                   {message.body}
                 </div>
               ))}

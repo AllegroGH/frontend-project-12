@@ -23,8 +23,9 @@ export const apiSlice = createApi({
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           await queryFulfilled
-        } catch {
-        toast.error(i18n.t('chatServer.loadingChannelsError'))
+        }
+        catch {
+          toast.error(i18n.t('chatServer.loadingChannelsError'))
         }
       },
     }),
@@ -47,13 +48,14 @@ export const apiSlice = createApi({
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           await queryFulfilled
-        } catch {
-        toast.error(i18n.t('chatServer.addChannelError'))
         }
-      },      
+        catch {
+          toast.error(i18n.t('chatServer.addChannelError'))
+        }
+      },
       invalidatesTags: ['Channel'],
     }),
-    
+
     // renameChannel: builder.mutation({
     //   query: ({ id, ...rest }) => ({
     //     url: `/channels/${id}`,
@@ -72,10 +74,11 @@ export const apiSlice = createApi({
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           await queryFulfilled
-        } catch {
-        toast.error(i18n.t('chatServer.renameChannelError'))
         }
-      },         
+        catch {
+          toast.error(i18n.t('chatServer.renameChannelError'))
+        }
+      },
       invalidatesTags: ['Channel'],
     }),
 
@@ -95,13 +98,14 @@ export const apiSlice = createApi({
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           await queryFulfilled
-        } catch {
-        toast.error(i18n.t('chatServer.removeChannelError'))
         }
-      },        
+        catch {
+          toast.error(i18n.t('chatServer.removeChannelError'))
+        }
+      },
       invalidatesTags: ['Channel'],
-    }),    
-   
+    }),
+
     // getMessages: builder.query({
     //   query: () => '/messages',
     // }),
@@ -111,11 +115,12 @@ export const apiSlice = createApi({
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           await queryFulfilled
-        } catch {
-        toast.error(i18n.t('chatServer.loadingMessagesError'))
         }
-      },        
-    }),    
+        catch {
+          toast.error(i18n.t('chatServer.loadingMessagesError'))
+        }
+      },
+    }),
 
     // addMessage: builder.mutation({
     //   query: (message) => ({
@@ -135,13 +140,14 @@ export const apiSlice = createApi({
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           await queryFulfilled
-        } catch {
-        toast.error(i18n.t('chatServer.addMessageError'))
         }
-      },         
+        catch {
+          toast.error(i18n.t('chatServer.addMessageError'))
+        }
+      },
       invalidatesTags: ['Message'],
-    }),    
-    
+    }),
+
     // removeMessage: builder.mutation({
     //   query: (id) => ({
     //     url: `/messages/${id}`,
@@ -158,12 +164,13 @@ export const apiSlice = createApi({
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
           await queryFulfilled
-        } catch {
-        toast.error(i18n.t('chatServer.removeMessageError'))
         }
-      },          
+        catch {
+          toast.error(i18n.t('chatServer.removeMessageError'))
+        }
+      },
       invalidatesTags: ['Message'],
-    }),    
+    }),
   }),
 })
 

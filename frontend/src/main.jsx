@@ -40,7 +40,7 @@ const initApp = async () => {
           </I18nextProvider>
         </ErrorBoundary>
       </RollbarProvider>
-    </StrictMode>
+    </StrictMode>,
   )
 }
 

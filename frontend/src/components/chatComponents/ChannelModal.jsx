@@ -43,16 +43,16 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
       .max(20, t('validation.min3max20'))
       .test(
         'unique-channel',
-        params => {
+        (params) => {
           if (params.originalValue && leoProfanity.check(params.originalValue)) return t('validation.mustBeCleanUnique')
           return t('validation.mustBeUnique')
         },
-        value => {
+        (value) => {
           if (!value || mode === 'remove') return true
           const channelExists = channels.some(c => c.name === leoProfanity.clean(value))
           // if (mode === 'rename' && value === channel.name) return true;
           return !channelExists
-        }
+        },
       ),
   })
 
@@ -65,15 +65,18 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
         const newChannel = await addChannel(cleanValues).unwrap()
         dispatch(setCurrentChannel(newChannel.id))
         toast.success(t('chatServer.channelAdded'))
-      } else if (mode === 'rename') {
+      }
+      else if (mode === 'rename') {
         setIsSubmitting(true)
         await renameChannel({ id: channel.id, ...cleanValues }).unwrap()
         toast.success(t('chatServer.channelRenamed'))
       }
       onHide()
-    } catch (err) {
+    }
+    catch (err) {
       console.error(t('chatServer.addOrRenameChannelError'), err)
-    } finally {
+    }
+    finally {
       setIsSubmitting(false)
     }
   }
@@ -90,9 +93,11 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
       // console.log(messages);
       toast.success(t('chatServer.channelRemoved'))
       onHide()
-    } catch (err) {
+    }
+    catch (err) {
       console.error(t('chatServer.removeChannelError'), err)
-    } finally {
+    }
+    finally {
       setIsSubmitting(false)
     }
   }
@@ -107,58 +112,61 @@ const ChannelModal = ({ mode, channel, channels, onHide }) => {
         </Modal.Title>
       </Modal.Header>
 
-      {mode !== 'remove' ? (
-        <Formik
-          initialValues={{ name: channel?.name || '' }}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-          validateOnBlur={false}
-        >
-          {({ errors, touched }) => (
-            <Form>
-              <Modal.Body>
-                <Field
-                  name="name"
-                  id={mode === 'add' ? 'addName' : 'renameName'}
-                  className={`mb-2 form-control${errors.name && touched.name ? ' is-invalid' : ''}`}
-                  // autoFocus // -- не работает, поэтому через useRef
-                  innerRef={inputRef}
-                />
-                <label htmlFor={mode === 'add' ? 'addName' : 'renameName'} className="visually-hidden">
-                  {t('chat.channelModal.labelForName')}
-                </label>
-                {errors.name && touched.name && (
-                  <div className="invalid-feedback d-block">
-                    {errors.name}
+      {mode !== 'remove'
+        ? (
+          <Formik
+            initialValues={{ name: channel?.name || '' }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+            validateOnBlur={false}
+          >
+            {({ errors, touched }) => (
+              <Form>
+                <Modal.Body>
+                  <Field
+                    name="name"
+                    id={mode === 'add' ? 'addName' : 'renameName'}
+                    className={`mb-2 form-control${errors.name && touched.name ? ' is-invalid' : ''}`}
+                    // autoFocus // -- не работает, поэтому через useRef
+                    innerRef={inputRef}
+                  />
+                  <label htmlFor={mode === 'add' ? 'addName' : 'renameName'} className="visually-hidden">
+                    {t('chat.channelModal.labelForName')}
+                  </label>
+                  {errors.name && touched.name && (
+                    <div className="invalid-feedback d-block">
+                      {errors.name}
+                    </div>
+                  )}
+                  <div className="d-flex justify-content-end">
+                    <Button variant="secondary" className="me-2" onClick={onHide} disabled={isSubmitting}>
+                      {t('chat.channelModal.cancelButton')}
+                    </Button>
+                    <Button type="submit" variant="primary" disabled={isSubmitting}>
+                      {isSubmitting ? t('chat.channelModal.sendButtonInProgress') : t('chat.channelModal.sendButton')}
+                    </Button>
                   </div>
-                )}
-                <div className="d-flex justify-content-end">
-                  <Button variant="secondary" className="me-2" onClick={onHide} disabled={isSubmitting}>
-                    {t('chat.channelModal.cancelButton')}
-                  </Button>
-                  <Button type="submit" variant="primary" disabled={isSubmitting}>
-                    {isSubmitting ? t('chat.channelModal.sendButtonInProgress') : t('chat.channelModal.sendButton')}
-                  </Button>
-                </div>
-              </Modal.Body>
-            </Form>
-          )}
-        </Formik>
-      ) : (
-        <div>
-          <Modal.Body>
-            <p className="lead">{t('chat.channelModal.confirmRemoveQuestion')}</p>
-            <div className="d-flex justify-content-end">
-              <Button variant="secondary" className="me-2" onClick={onHide} disabled={isSubmitting}>
-                {t('chat.channelModal.cancelButton')}
-              </Button>
-              <Button variant="danger" onClick={handleRemove} disabled={isSubmitting}>
-                {t('chat.channelModal.removeButton')}
-              </Button>
-            </div>
-          </Modal.Body>
-        </div>
-      )}
+                </Modal.Body>
+              </Form>
+            )}
+          </Formik>
+        )
+        : (
+          <div>
+            <Modal.Body>
+              <p className="lead">{t('chat.channelModal.confirmRemoveQuestion')}</p>
+              <div className="d-flex justify-content-end">
+                <Button variant="secondary" className="me-2" onClick={onHide} disabled={isSubmitting}>
+                  {t('chat.channelModal.cancelButton')}
+                </Button>
+                <Button variant="danger" onClick={handleRemove} disabled={isSubmitting}>
+                  {t('chat.channelModal.removeButton')}
+                </Button>
+              </div>
+            </Modal.Body>
+          </div>
+        )
+      }
     </Modal>
   )
 }

@@ -6,7 +6,8 @@ import { useFormik } from 'formik'
 import { useTranslation } from 'react-i18next'
 import leoProfanity from 'leo-profanity'
 
-const MessageForm = React.forwardRef(({ channelId }, ref) => {
+const MessageForm = React.forwardRef(function MessageForm({ channelId }, ref) {
+
   const { username } = useSelector(state => state.auth)
   const [addMessage] = useAddMessageMutation()
   const inputRef = useRef(null)
@@ -16,7 +17,7 @@ const MessageForm = React.forwardRef(({ channelId }, ref) => {
   React.useImperativeHandle(ref, () => ({
     focus: () => {
       inputRef.current?.focus()
-    }
+    },
   }))
 
   const formik = useFormik({
@@ -27,9 +28,11 @@ const MessageForm = React.forwardRef(({ channelId }, ref) => {
         await addMessage({ username, channelId, body: leoProfanity.clean(values.body) })
         resetForm()
         inputRef.current?.focus()
-      } catch (err) {
+      }
+      catch (err) {
         console.error('Failed to send message:', err)
-      } finally {
+      }
+      finally {
         setIsSubmitting(false)
       }
     },

@@ -1,12 +1,12 @@
 import io from 'socket.io-client'
 import { store } from './store'
-import { apiSlice  } from './slices/apiSlice'
+import { apiSlice } from './slices/apiSlice'
 // import { useGetChannelsQuery } from '../slices/apiSlice';
 import { setCurrentChannel } from './slices/chatSlice'
 
 let socketInstance = null
 
-export const initSocket = token => {
+export const initSocket = (token) => {
   if (socketInstance) return
 
   socketInstance = io('/', {
@@ -17,10 +17,10 @@ export const initSocket = token => {
     // reconnectionAttempts: 5,
     reconnectionDelay: 1000,
     reconnectionDelayMax: 5000,
-    timeout: 20000    
+    timeout: 20000,
   })
 
-  socketInstance.on('disconnect', reason => {
+  socketInstance.on('disconnect', (reason) => {
     if (reason === 'io server disconnect') console.log('Сервер разорвал соединение')
   })
 
@@ -28,30 +28,30 @@ export const initSocket = token => {
   //   console.error('Не удалось подключиться после всех попыток');
   // });
 
-  socketInstance.on('newMessage', message => {
+  socketInstance.on('newMessage', (message) => {
     store.dispatch(
-      apiSlice.util.updateQueryData('getMessages', undefined, draft => {
+      apiSlice.util.updateQueryData('getMessages', undefined, (draft) => {
         // console.log('socket.js:newMessage:: ', message);
         draft.push(message)
-      })
+      }),
     )
   })
 
-  socketInstance.on('newChannel', channel => {
+  socketInstance.on('newChannel', (channel) => {
     store.dispatch(
-      apiSlice.util.updateQueryData('getChannels', undefined, draft => {
+      apiSlice.util.updateQueryData('getChannels', undefined, (draft) => {
         draft.push(channel)
-      })
+      }),
     )
   })
 
   socketInstance.on('removeChannel', ({ id }) => {
     store.dispatch(
-      apiSlice.util.updateQueryData('getChannels', undefined, draft => {
+      apiSlice.util.updateQueryData('getChannels', undefined, (draft) => {
         return draft.filter(channel => channel.id !== id)
-      })
+      }),
     )
-    
+
     // Переключение на general при удалении текущего
     const { currentChannelId } = store.getState().chat
     if (currentChannelId === id) {
@@ -67,10 +67,10 @@ export const initSocket = token => {
 
   socketInstance.on('renameChannel', ({ id, name }) => {
     store.dispatch(
-      apiSlice.util.updateQueryData('getChannels', undefined, draft => {
+      apiSlice.util.updateQueryData('getChannels', undefined, (draft) => {
         const channel = draft.find(c => c.id === id)
         if (channel) channel.name = name
-      })
+      }),
     )
   })
 }

@@ -3,7 +3,7 @@ const ru = {
     p404: {
       notFound: 'Страница не найдена',
 
-      mainPageLinkPrefix: 'Но вы можете перейти',
+      mainPageLinkPrefix: 'Но вы можете перейти ',
       mainPageLinkText: 'на главную страницу',
     },
 
@@ -55,7 +55,7 @@ const ru = {
       messageForm: {
         ariaLabel: 'Новое сообщение',
         placeholder: 'Введите сообщение...',
-        sendSpan: 'Отправить',            
+        sendSpan: 'Отправить',
       },
 
       channelModal: {
@@ -94,7 +94,7 @@ const ru = {
       userExists: 'Такой пользователь уже существует',
 
       loadingData: 'Загрузка...',
-      loadingDataError: "Ошибка загрузки данных\n\n(попробуйте обновить страницу)",
+      loadingDataError: 'Ошибка загрузки данных\n\n(попробуйте обновить страницу)',
 
       channelAdded: 'Канал создан',
       channelRenamed: 'Канал переименован',
@@ -103,7 +103,7 @@ const ru = {
       loadingChannelsError: `Ошибка загрузки каналов`,
       addOrRenameChannelError: 'Ошибка добавления или изменения канала',
       addChannelError: `Ошибка добавления канала`,
-      renameChannelError: `Ошибка переименования канала`,      
+      renameChannelError: `Ошибка переименования канала`,
       removeChannelError: 'Ошибка удаления канала',
 
       loadingMessagesError: `Ошибка загрузки сообщений`,
@@ -115,7 +115,7 @@ const ru = {
       netIsDown: 'Отсутствует интернет-соединение',
       netIsUp: 'Соединение восстановлено',
     },
-  }
+  },
 }
 
 // [а-яА-ЯёЁ]

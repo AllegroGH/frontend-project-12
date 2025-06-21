@@ -1,10 +1,9 @@
-import React from 'react'
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import { Alert, Container, Row, Col, Card } from 'react-bootstrap'
+import { Container, Row, Col, Card } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../slices/authSlice'
 import signupImg from '../assets/signup_img.jpg'
@@ -29,16 +28,16 @@ const SignupPage = () => {
       .min(6, t('validation.min6')),
     confirmPassword: Yup.string().trim()
       .required(t('validation.confirmPassword'))
-      .oneOf([Yup.ref('password'), null], t('validation.passwordsMustMatch'))
+      .oneOf([Yup.ref('password'), null], t('validation.passwordsMustMatch')),
   })
 
   const initialValues = {
     username: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   }
 
-  const handleSubmit = async values => {
+  const handleSubmit = async (values) => {
     try {
       setSignupError('')
       setIsSubmitting(true)
@@ -53,19 +52,22 @@ const SignupPage = () => {
       dispatch(setCredentials({ username, token }))
 
       navigate('/')
-
-    } catch (error) {
+    }
+    catch (error) {
       if (error.response?.status === 409) {
         setSignupError(t('chatServer.userExists'))
-      } else if (error.response?.status === 500) {
+      }
+      else if (error.response?.status === 500) {
         toast.error(t('chatServer.serverUnavailable'))
-      } else {
+      }
+      else {
         setSignupError(t('chatServer.signupError'))
       }
       usernameRef.current?.focus()
       usernameRef.current?.select()
       console.error(t('chatServer.signupError'), error)
-    } finally {
+    }
+    finally {
       setIsSubmitting(false)
     }
   }
@@ -106,21 +108,24 @@ const SignupPage = () => {
                         placeholder={t('signup.usernamePlaceholder')}
                         required={true}
                         innerRef={usernameRef}
-                        onChange={e => {
+                        onChange={(e) => {
                           resetSignupError()
-                          handleChange(e)  // продолжаем выполнение родного обработчика Formik
+                          handleChange(e) // продолжаем выполнение родного обработчика Formik
                         }}
                       />
                       <label htmlFor="username">{t('signup.usernameLabel')}</label>
-                      {signupError ? (
-                        <div className="invalid-tooltip"></div>
-                      ) : (
-                        <ErrorMessage
-                          name="username"
-                          component="div"
-                          className="invalid-tooltip"
-                        />
-                      )}
+                      {signupError
+                        ? (
+                          <div className="invalid-tooltip"></div>
+                        )
+                        : (
+                          <ErrorMessage
+                            name="username"
+                            component="div"
+                            className="invalid-tooltip"
+                          />
+                        )
+                      }
                     </div>
 
                     <div className="form-floating mb-3">
@@ -134,15 +139,18 @@ const SignupPage = () => {
                         required={true}
                       />
                       <label htmlFor="password">{t('signup.passwordLabel')}</label>
-                      {signupError ? (
-                        <div className="invalid-tooltip"></div>
-                      ) : (
-                        <ErrorMessage
-                          name="password"
-                          component="div"
-                          className="invalid-tooltip"
-                        />
-                      )}
+                      {signupError
+                        ? (
+                          <div className="invalid-tooltip"></div>
+                        )
+                        : (
+                          <ErrorMessage
+                            name="password"
+                            component="div"
+                            className="invalid-tooltip"
+                          />
+                        )
+                      }
                     </div>
 
                     <div className="form-floating mb-4">
@@ -156,15 +164,18 @@ const SignupPage = () => {
                         required={true}
                       />
                       <label htmlFor="confirmPassword">{t('signup.confirmPasswordLabel')}</label>
-                      {signupError ? (
-                        <div className="invalid-tooltip">{signupError}</div>
-                      ) : (
-                        <ErrorMessage
-                          name="confirmPassword"
-                          component="div"
-                          className="invalid-tooltip"
-                        />
-                      )}
+                      {signupError
+                        ? (
+                          <div className="invalid-tooltip">{signupError}</div>
+                        )
+                        : (
+                          <ErrorMessage
+                            name="confirmPassword"
+                            component="div"
+                            className="invalid-tooltip"
+                          />
+                        )
+                      }
                     </div>
                     <button
                       type="submit"

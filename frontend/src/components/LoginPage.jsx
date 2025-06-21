@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
-import { Alert, Container, Row, Col, Card, Navbar } from 'react-bootstrap'
+import { Alert, Container, Row, Col, Card } from 'react-bootstrap'
 import { useDispatch } from 'react-redux'
 import { setCredentials } from '../slices/authSlice'
 import loginImg from '../assets/login_img.jpg'
@@ -28,7 +28,7 @@ const LoginPage = () => {
     password: '',
   }
 
-  const handleSubmit = async values => {
+  const handleSubmit = async (values) => {
     try {
       setAuthError('')
       setIsSubmitting(true)
@@ -45,16 +45,19 @@ const LoginPage = () => {
 
       navigate('/')
       // console.log('Login: navigate to /');
-    } catch (error) {
+    }
+    catch (error) {
       if (error.response?.status === 500) {
         toast.error(t('chatServer.serverUnavailable'))
-      } else {
+      }
+      else {
         setAuthError(t('chatServer.incorrectUserOrPass'))
         usernameRef.current?.focus()
         usernameRef.current?.select()
       }
       console.error(t('chatServer.authError'), error)
-    } finally {
+    }
+    finally {
       // console.log('Отправленные данные:', values);
       setIsSubmitting(false)
     }
@@ -97,9 +100,9 @@ const LoginPage = () => {
                           as="input"
                           required={true}
                           innerRef={usernameRef}
-                          onChange={e => {
+                          onChange={(e) => {
                             resetAuthError()
-                            handleChange(e)  // продолжаем выполнение родного обработчика Formik
+                            handleChange(e) // продолжаем выполнение родного обработчика Formik
                           }}
                         />
                         <label htmlFor="username">{t('login.usernameLabel')}</label>
@@ -143,7 +146,8 @@ const LoginPage = () => {
             </Card.Body>
             <Card.Footer className="p-4">
               <div className="text-center">
-                <span>{t('login.signPageLinkPrefix')}</span>{' '}
+                <span>{t('login.signPageLinkPrefix')}</span>
+                {' '}
                 <Link to="/signup">{t('login.signPageLinkText')}</Link>
               </div>
             </Card.Footer>

@@ -5,7 +5,7 @@ const initialState = {
   token: localStorage.getItem('chatApp_jwtToken') || null,
   username: localStorage.getItem('chatApp_username') || null,
   status: 'idle',
-  error: null
+  error: null,
 }
 
 const authSlice = createSlice({
@@ -18,14 +18,14 @@ const authSlice = createSlice({
       localStorage.setItem('chatApp_jwtToken', action.payload.token)
       localStorage.setItem('chatApp_username', action.payload.username)
     },
-    logout: state => {
+    logout: (state) => {
       disconnectSocket()
       state.token = null
       state.username = null
       localStorage.removeItem('chatApp_jwtToken')
       localStorage.removeItem('chatApp_username')
-    }
-  }
+    },
+  },
 })
 
 export const { setCredentials, logout } = authSlice.actions
